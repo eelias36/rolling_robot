@@ -1,0 +1,2 @@
+rolling_robot_description:rolling_robot_gazebo
+-DCATKIN_DEVEL_PREFIX=/home/eelias/rolling_robot/devel -DCMAKE_INSTALL_PREFIX=/home/eelias/rolling_robot/install -G Unix Makefiles
