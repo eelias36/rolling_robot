@@ -1,4 +1,4 @@
-prefix=/home/eelias/rolling_robot/devel
+prefix=/home/eric/rolling_robot/devel
 
 Name: rolling_robot_gazebo
 Description: Description of rolling_robot_gazebo

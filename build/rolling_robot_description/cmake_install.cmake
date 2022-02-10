@@ -1,8 +1,8 @@
-# Install script for directory: /home/eelias/rolling_robot/src/rolling_robot_description
+# Install script for directory: /home/eric/rolling_robot/src/rolling_robot_description
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/eelias/rolling_robot/install")
+  set(CMAKE_INSTALL_PREFIX "/home/eric/rolling_robot/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -32,18 +32,23 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
   set(CMAKE_INSTALL_SO_NO_EXE "1")
 endif()
 
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/eelias/rolling_robot/build/rolling_robot_description/catkin_generated/installspace/rolling_robot_description.pc")
+# Is this installation the result of a crosscompile?
+if(NOT DEFINED CMAKE_CROSSCOMPILING)
+  set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/eric/rolling_robot/build/rolling_robot_description/catkin_generated/installspace/rolling_robot_description.pc")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/rolling_robot_description/cmake" TYPE FILE FILES
-    "/home/eelias/rolling_robot/build/rolling_robot_description/catkin_generated/installspace/rolling_robot_descriptionConfig.cmake"
-    "/home/eelias/rolling_robot/build/rolling_robot_description/catkin_generated/installspace/rolling_robot_descriptionConfig-version.cmake"
+    "/home/eric/rolling_robot/build/rolling_robot_description/catkin_generated/installspace/rolling_robot_descriptionConfig.cmake"
+    "/home/eric/rolling_robot/build/rolling_robot_description/catkin_generated/installspace/rolling_robot_descriptionConfig-version.cmake"
     )
 endif()
 
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/rolling_robot_description" TYPE FILE FILES "/home/eelias/rolling_robot/src/rolling_robot_description/package.xml")
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/rolling_robot_description" TYPE FILE FILES "/home/eric/rolling_robot/src/rolling_robot_description/package.xml")
 endif()
 

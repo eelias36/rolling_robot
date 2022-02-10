@@ -67,14 +67,14 @@ set(rolling_robot_gazebo_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(rolling_robot_gazebo_SOURCE_PREFIX /home/eelias/rolling_robot/src/rolling_robot_gazebo)
-  set(rolling_robot_gazebo_DEVEL_PREFIX /home/eelias/rolling_robot/devel)
+  set(rolling_robot_gazebo_SOURCE_PREFIX /home/eric/rolling_robot/src/rolling_robot_gazebo)
+  set(rolling_robot_gazebo_DEVEL_PREFIX /home/eric/rolling_robot/devel)
   set(rolling_robot_gazebo_INSTALL_PREFIX "")
   set(rolling_robot_gazebo_PREFIX ${rolling_robot_gazebo_DEVEL_PREFIX})
 else()
   set(rolling_robot_gazebo_SOURCE_PREFIX "")
   set(rolling_robot_gazebo_DEVEL_PREFIX "")
-  set(rolling_robot_gazebo_INSTALL_PREFIX /home/eelias/rolling_robot/install)
+  set(rolling_robot_gazebo_INSTALL_PREFIX /home/eric/rolling_robot/install)
   set(rolling_robot_gazebo_PREFIX ${rolling_robot_gazebo_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/eelias/rolling_robot/install/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/eric/rolling_robot/install/lib;/home/eric/test/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -211,7 +211,7 @@ foreach(depend ${depends})
   _unpack_libraries_with_build_configuration(rolling_robot_gazebo_LIBRARIES ${rolling_robot_gazebo_LIBRARIES})
 
   _list_append_unique(rolling_robot_gazebo_LIBRARY_DIRS ${${rolling_robot_gazebo_dep}_LIBRARY_DIRS})
-  list(APPEND rolling_robot_gazebo_EXPORTED_TARGETS ${${rolling_robot_gazebo_dep}_EXPORTED_TARGETS})
+  _list_append_deduplicate(rolling_robot_gazebo_EXPORTED_TARGETS ${${rolling_robot_gazebo_dep}_EXPORTED_TARGETS})
 endforeach()
 
 set(pkg_cfg_extras "")

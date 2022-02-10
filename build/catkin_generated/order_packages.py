@@ -1,5 +1,5 @@
 # generated from catkin/cmake/template/order_packages.context.py.in
-source_root_dir = '/home/eelias/rolling_robot/src'
+source_root_dir = '/home/eric/rolling_robot/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/opt/ros/kinetic'.split(';') if '/opt/ros/kinetic' != '' else []
+underlay_workspaces = '/home/eric/test/devel;/opt/ros/noetic'.split(';') if '/home/eric/test/devel;/opt/ros/noetic' != '' else []
