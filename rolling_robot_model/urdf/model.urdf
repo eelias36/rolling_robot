@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot name="rolling_robot_urdf">
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+  
+  <link name="base_link">
+    <visual>
+      <geometry>
+	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/robot_shape.stl"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <geometry>
+	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/robot_shape.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.6667" ixy="0.0" ixz="0.0" iyy="1.6667" iyz="0.0" izz="1.6667"/>
+    </inertial>
+  </link>
+  
+       <!--
+   <link name="actuator1">
+    <visual>
+      <geometry>
+        <cylinder length="1" radius="0.05"/>
+      </geometry>
+ 
+      <origin rpy="0 -0.523599 0" xyz="-0.045001 -0.22 -0.384124"/>
+      <material name="white"/>
+      
+    </visual>
+  </link>
+  -->
+  
+</robot>

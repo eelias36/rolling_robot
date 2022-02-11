@@ -117,3 +117,15 @@
 /home/eric/rolling_robot/build/rolling_robot_gazebo/CMakeFiles/rebuild_cache.dir
 /home/eric/rolling_robot/build/rolling_robot_gazebo/CMakeFiles/edit_cache.dir
 /home/eric/rolling_robot/build/rolling_robot_gazebo/CMakeFiles/test.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/install/local.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/edit_cache.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/test.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/controller_manager_msgs_generate_messages_py.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/install/strip.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/controller_manager_msgs_generate_messages_nodejs.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/controller_manager_msgs_generate_messages_lisp.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/install.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/list_install_components.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/rebuild_cache.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/controller_manager_msgs_generate_messages_eus.dir
+/home/eric/rolling_robot/build/rolling_robot_control/CMakeFiles/controller_manager_msgs_generate_messages_cpp.dir

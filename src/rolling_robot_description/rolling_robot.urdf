@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<robot name="rolling_robot">
+
+  <!-- ros_control plugin -->
+<gazebo>
+  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+  </plugin>
+</gazebo>
+
+  <material name="grey">
+    <color rgba="0.5 0.5 0.5 0.5"/>
+  </material>
+  
+  <link name="dummy">
+  </link>
+  
+  <link name="base_link">
+    <visual>
+      <geometry>
+	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/robot_shape.stl"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/robot_shape.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.6667" ixy="0.0" ixz="0.0" iyy="1.6667" iyz="0.0" izz="1.6667"/>
+    </inertial>
+  </link>
+  
+  <joint name="dummy_joint" type="fixed">
+     <parent link="dummy"/>
+     <child link="base_link"/>
+   </joint>
+  
+  <link name="link1">
+    <visual>
+      <geometry>
+        <cylinder length="1" radius="0.05"/>
+      </geometry>
+      <origin rpy="-0.523599 -0 -0" xyz="-0.045001 -0.22 -0.384124"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	<cylinder length="1" radius="0.05"/>
+      </geometry>
+      <origin rpy="-0.523599 -0 -0" xyz="-0.045001 -0.22 -0.384124"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00083958" ixy="0.0" ixz="0.0" iyy="0.00083958" iyz="0.0" izz="0.00083958"/>
+    </inertial>
+  </link>
+  
+  <joint name="joint1" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="0 -0.5 -0.866025"/>
+    <limit effort="-1" lower="0.0" upper="2" velocity="-1"/>
+  </joint>
+  
+  <transmission name="tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+</robot>

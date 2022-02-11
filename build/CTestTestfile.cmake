@@ -7,3 +7,4 @@
 subdirs("gtest")
 subdirs("rolling_robot_description")
 subdirs("rolling_robot_gazebo")
+subdirs("rolling_robot_control")

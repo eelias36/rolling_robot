@@ -201,7 +201,7 @@
         </surface>
       </collision>
     </link>
-    <joint name='link_0_JOINT_1' type='prismatic'>
+    <joint name='joint1' type='prismatic'>
       <parent>link_0</parent>
       <child>link_0_0</child>
       <pose>0 0 0 0 -0 0</pose>
@@ -235,4 +235,21 @@
     <static>0</static>
     <allow_auto_disable>1</allow_auto_disable>
   </model>
+ <transmission name="tran1">
+	<type>transmission_interface/SimpleTransmission</type>
+	<joint name="joint1">
+	  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+	</joint>
+	<actuator name="motor1">
+	  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+	  <mechanicalReduction>1</mechanicalReduction>
+	</actuator>
+  </transmission>
+
+  <!-- Gazebo plugin for ROS Control -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/rolling_robot</robotNamespace>
+    </plugin>
+  </gazebo>
 </sdf>
