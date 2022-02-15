@@ -14,6 +14,7 @@ class Actuators {
 
 	protected:
 		double _commanded_pos [12];
+		float _counter;
 
 };
 
