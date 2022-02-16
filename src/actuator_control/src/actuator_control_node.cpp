@@ -21,6 +21,11 @@ main( int argc, char* argv[] ){
 	double frequency = 30;
 	ros::Rate timer( frequency );
 
+	actuators.home();
+	actuators.update_command_msgs();
+
+	ros::Duration(2.0).sleep();
+
 	while( ros::ok() ){
 		actuators.update_commands();
 		actuators.update_command_msgs();

@@ -10,6 +10,7 @@ class Actuators {
 		virtual ~Actuators();
 		void update_command_msgs(void);
 		void update_commands(void);
+		void home(void);
 		std_msgs::Float64 command_msgs [12];
 
 	protected:
