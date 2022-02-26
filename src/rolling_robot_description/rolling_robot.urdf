@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <robot name="rolling_robot">
 
-
-
   <material name="grey">
     <color rgba="0.5 0.5 0.5 0.5"/>
   </material>
@@ -13,19 +11,19 @@
   <link name="base_link">
     <visual>
       <geometry>
-	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/robot_shape.stl"/>
+	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/rhombicuboctahedron.stl" scale="0.025641 0.025641 0.025641"/>
       </geometry>
       <origin xyz="0 0 0"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/robot_shape.stl"/>
+	<mesh filename="/home/eric/rolling_robot/rolling_robot_model/rhombicuboctahedron.stl" scale="0.025641 0.025641 0.025641"/>
       </geometry>
     </collision>
     <inertial>
-      <mass value="10"/>
-      <inertia ixx="1.6667" ixy="0.0" ixz="0.0" iyy="1.6667" iyz="0.0" izz="1.6667"/>
+      <mass value="20"/>
+      <inertia ixx="3.3334" ixy="0.0" ixz="0.0" iyy="3.3334" iyz="0.0" izz="3.3334"/>
     </inertial>
   </link>
   
@@ -33,124 +31,165 @@
      <parent link="dummy"/>
      <child link="base_link"/>
    </joint>
-  
+
   <link name="link1">
     <visual>
       <geometry>
-        <cylinder length="1" radius="0.05"/>
+        <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="-0.523599 -0 -0" xyz="-0.045001 -0.22 -0.384124"/>
+      <origin rpy="-0.392699 -0 -0" xyz="0 -0.094 -0.224703"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-	<cylinder length="1" radius="0.05"/>
+	    <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="-0.523599 -0 -0" xyz="-0.045001 -0.22 -0.384124"/>
+      <origin rpy="-0.392699 -0 -0" xyz="0 -0.094 -0.224703"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
-    <inertia ixx="0.00083958" ixy="0.0" ixz="0.0" iyy="0.00083958" iyz="0.0" izz="0.00083958"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
     </inertial>
   </link>
 
   <link name="link2">
     <visual>
       <geometry>
-        <cylinder length="1" radius="0.05"/>
+        <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="0.523599 -0 -0" xyz="-0.045001 0.22 -0.384124"/>
+      <origin rpy="0.392699 -0 -0" xyz="0 0.094 -0.224703"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-	<cylinder length="1" radius="0.05"/>
+	    <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="0.523599 -0 -0" xyz="-0.045001 0.22 -0.384124"/>
+      <origin rpy="0.392699 -0 -0" xyz="0 0.094 -0.224703"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
-    <inertia ixx="0.00083958" ixy="0.0" ixz="0.0" iyy="0.00083958" iyz="0.0" izz="0.00083958"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
     </inertial>
   </link>
 
   <link name="link3">
     <visual>
       <geometry>
-        <cylinder length="1" radius="0.05"/>
+        <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="1.5708 0 0" xyz="0.013302 0.45 0"/>
+      <origin rpy="1.178097 0 0" xyz="0 0.221 -0.088000"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-	<cylinder length="1" radius="0.05"/>
+	    <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="1.5708 0 0" xyz="0.013302 0.45 0"/>
+      <origin rpy="1.178097 0 0" xyz="0 0.221 -0.088000"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
-    <inertia ixx="0.00083958" ixy="0.0" ixz="0.0" iyy="0.00083958" iyz="0.0" izz="0.00083958"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
     </inertial>
   </link>
+
 
   <link name="link4">
     <visual>
       <geometry>
-        <cylinder length="1" radius="0.05"/>
+        <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="-0.523601 0 0" xyz="0 0.23 0.38"/>
+      <origin rpy="1.963495 0 0" xyz="0 0.221 0.088000"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-	<cylinder length="1" radius="0.05"/>
+	    <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="-0.523601 0 0" xyz="0 0.23 0.38"/>
+      <origin rpy="1.963495 0 0" xyz="0 0.221 0.088000"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
-    <inertia ixx="0.00083958" ixy="0.0" ixz="0.0" iyy="0.00083958" iyz="0.0" izz="0.00083958"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
     </inertial>
   </link>
 
   <link name="link5">
     <visual>
       <geometry>
-        <cylinder length="1" radius="0.05"/>
+        <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="0.523601 0 0" xyz="0 -0.23 0.38"/>
+      <origin rpy="2.748894 0 0" xyz="0 0.094 0.224703"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-	<cylinder length="1" radius="0.05"/>
+	    <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="0.523601 0 0" xyz="0 -0.23 0.38"/>
+      <origin rpy="2.748894 0 0" xyz="0 0.094 0.224703"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
-    <inertia ixx="0.00083958" ixy="0.0" ixz="0.0" iyy="0.00083958" iyz="0.0" izz="0.00083958"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
     </inertial>
   </link>
-  
+ 
   <link name="link6">
     <visual>
       <geometry>
-        <cylinder length="1" radius="0.05"/>
+        <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="-1.5708 0 0" xyz="0.013302 -0.45 0"/>
+      <origin rpy="-2.748894 0 0" xyz="0 -0.094 0.224703"/>
       <material name="grey"/>
     </visual>
     <collision>
       <geometry>
-	<cylinder length="1" radius="0.05"/>
+	    <cylinder length="0.1778" radius="0.005"/>
       </geometry>
-      <origin rpy="-1.5708 0 0" xyz="0.013302 -0.45 0"/>
+      <origin rpy="-2.748894 0 0" xyz="0 -0.094 0.224703"/>
     </collision>
     <inertial>
       <mass value="0.1"/>
-    <inertia ixx="0.00083958" ixy="0.0" ixz="0.0" iyy="0.00083958" iyz="0.0" izz="0.00083958"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link7">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="-1.963495 0 0" xyz="0 -0.221 0.088000"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="-1.963495 0 0" xyz="0 -0.221 0.088000"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link8">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="-1.178097 0 0" xyz="0 -0.221 -0.088000"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="-1.178097 0 0" xyz="0 -0.221 -0.088000"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
     </inertial>
   </link>
 
@@ -158,50 +197,66 @@
     <parent link="base_link"/>
     <child link="link1"/>
     <origin xyz="0 0 0"/>
-    <axis xyz="0 -0.5 -0.866025"/>
-    <limit effort="10000000" lower="0.0" upper="2.0" velocity="1000"/>
+    <axis xyz="0 -0.382683 -0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
   </joint>
 
   <joint name="joint2" type="prismatic">
     <parent link="base_link"/>
     <child link="link2"/>
     <origin xyz="0 0 0"/>
-    <axis xyz="0 0.5 -0.866025"/>
-    <limit effort="10000000" lower="0.0" upper="2.0" velocity="1000"/>
+    <axis xyz="0 0.382683 -0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
   </joint>
 
   <joint name="joint3" type="prismatic">
     <parent link="base_link"/>
     <child link="link3"/>
     <origin xyz="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="10000000" lower="0.0" upper="2.0" velocity="1000"/>
+    <axis xyz="0 0.923879 -0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
   </joint>
 
   <joint name="joint4" type="prismatic">
     <parent link="base_link"/>
     <child link="link4"/>
     <origin xyz="0 0 0"/>
-    <axis xyz="0 0.5 0.866025"/>
-    <limit effort="10000000" lower="0.0" upper="2.0" velocity="1000"/>
+    <axis xyz="0 0.923879 0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
   </joint>
 
   <joint name="joint5" type="prismatic">
     <parent link="base_link"/>
     <child link="link5"/>
     <origin xyz="0 0 0"/>
-    <axis xyz="0 -0.5 0.866025"/>
-    <limit effort="10000000" lower="0.0" upper="2.0" velocity="1000"/>
+    <axis xyz="0 0.382683 0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
   </joint>
 
   <joint name="joint6" type="prismatic">
     <parent link="base_link"/>
     <child link="link6"/>
     <origin xyz="0 0 0"/>
-    <axis xyz="0 -1 0"/>
-    <limit effort="10000000" lower="0.0" upper="2.0" velocity="1000"/>
+    <axis xyz="0 -0.382683 0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
   </joint>
-  
+
+  <joint name="joint7" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link7"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="0 -0.923879 0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint8" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link8"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="0 -0.923879 -0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+ <!-- 
   <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="joint1">
@@ -267,7 +322,7 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  
+  -->
     <!-- ros_control plugin -->
 <gazebo>
   <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
