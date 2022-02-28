@@ -9,12 +9,12 @@ class Actuators {
 		Actuators();
 		virtual ~Actuators();
 		void update_command_msgs(void);
-		void update_commands(void);
+		void roll_fwd_update(void);
 		void home(void);
-		std_msgs::Float64 command_msgs [12];
+		std_msgs::Float64 command_msgs[16];
 
 	protected:
-		double _commanded_pos [12];
+		double _commanded_pos[16];
 		float _counter;
 
 };

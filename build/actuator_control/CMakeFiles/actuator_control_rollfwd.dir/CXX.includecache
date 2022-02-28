@@ -12,7 +12,7 @@ ros/ros.h
 std_msgs/Float64.h
 /home/eric/rolling_robot/src/actuator_control/include/actuator_control/std_msgs/Float64.h
 
-/home/eric/rolling_robot/src/actuator_control/src/actuator_control_node.cpp
+/home/eric/rolling_robot/src/actuator_control/src/actuator_control_rollfwd.cpp
 iostream
 -
 string

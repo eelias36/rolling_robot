@@ -402,6 +402,19 @@ roscpp_generate_messages_py/fast:
 .PHONY : roscpp_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named actuator_control_rollfwd
+
+# Build rule for target.
+actuator_control_rollfwd: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 actuator_control_rollfwd
+.PHONY : actuator_control_rollfwd
+
+# fast build rule for target.
+actuator_control_rollfwd/fast:
+	$(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build.make actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build
+.PHONY : actuator_control_rollfwd/fast
+
+#=============================================================================
 # Target rules for targets named std_msgs_generate_messages_eus
 
 # Build rule for target.
@@ -1290,6 +1303,7 @@ help:
 	@echo "... roscpp_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_py"
+	@echo "... actuator_control_rollfwd"
 	@echo "... std_msgs_generate_messages_eus"
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... rosgraph_msgs_generate_messages_cpp"

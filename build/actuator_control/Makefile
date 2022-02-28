@@ -303,6 +303,21 @@ roscpp_generate_messages_py/fast:
 .PHONY : roscpp_generate_messages_py/fast
 
 # Convenience name for target.
+actuator_control/CMakeFiles/actuator_control_rollfwd.dir/rule:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f CMakeFiles/Makefile2 actuator_control/CMakeFiles/actuator_control_rollfwd.dir/rule
+.PHONY : actuator_control/CMakeFiles/actuator_control_rollfwd.dir/rule
+
+# Convenience name for target.
+actuator_control_rollfwd: actuator_control/CMakeFiles/actuator_control_rollfwd.dir/rule
+
+.PHONY : actuator_control_rollfwd
+
+# fast build rule for target.
+actuator_control_rollfwd/fast:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build.make actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build
+.PHONY : actuator_control_rollfwd/fast
+
+# Convenience name for target.
 actuator_control/CMakeFiles/std_msgs_generate_messages_eus.dir/rule:
 	cd /home/eric/rolling_robot/build && $(MAKE) -f CMakeFiles/Makefile2 actuator_control/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
 .PHONY : actuator_control/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
@@ -491,6 +506,33 @@ src/actuator_control_node.cpp.s:
 	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_node.dir/build.make actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.s
 .PHONY : src/actuator_control_node.cpp.s
 
+src/actuator_control_rollfwd.o: src/actuator_control_rollfwd.cpp.o
+
+.PHONY : src/actuator_control_rollfwd.o
+
+# target to build an object file
+src/actuator_control_rollfwd.cpp.o:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build.make actuator_control/CMakeFiles/actuator_control_rollfwd.dir/src/actuator_control_rollfwd.cpp.o
+.PHONY : src/actuator_control_rollfwd.cpp.o
+
+src/actuator_control_rollfwd.i: src/actuator_control_rollfwd.cpp.i
+
+.PHONY : src/actuator_control_rollfwd.i
+
+# target to preprocess a source file
+src/actuator_control_rollfwd.cpp.i:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build.make actuator_control/CMakeFiles/actuator_control_rollfwd.dir/src/actuator_control_rollfwd.cpp.i
+.PHONY : src/actuator_control_rollfwd.cpp.i
+
+src/actuator_control_rollfwd.s: src/actuator_control_rollfwd.cpp.s
+
+.PHONY : src/actuator_control_rollfwd.s
+
+# target to generate assembly for a file
+src/actuator_control_rollfwd.cpp.s:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build.make actuator_control/CMakeFiles/actuator_control_rollfwd.dir/src/actuator_control_rollfwd.cpp.s
+.PHONY : src/actuator_control_rollfwd.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -512,6 +554,7 @@ help:
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_py"
 	@echo "... install"
+	@echo "... actuator_control_rollfwd"
 	@echo "... std_msgs_generate_messages_eus"
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... rosgraph_msgs_generate_messages_cpp"
@@ -528,6 +571,9 @@ help:
 	@echo "... src/actuator_control_node.o"
 	@echo "... src/actuator_control_node.i"
 	@echo "... src/actuator_control_node.s"
+	@echo "... src/actuator_control_rollfwd.o"
+	@echo "... src/actuator_control_rollfwd.i"
+	@echo "... src/actuator_control_rollfwd.s"
 .PHONY : help
 
 
