@@ -11,6 +11,8 @@ ros/ros.h
 /home/eric/rolling_robot/src/planner/include/planner/ros/ros.h
 Eigen/Dense
 -
+std_msgs/Int8.h
+/home/eric/rolling_robot/src/planner/include/planner/std_msgs/Int8.h
 geometry_msgs/Pose.h
 /home/eric/rolling_robot/src/planner/include/planner/geometry_msgs/Pose.h
 gazebo_msgs/LinkStates.h
@@ -779,6 +781,22 @@ ros/forwards.h
 /opt/ros/noetic/include/ros/ros/forwards.h
 
 /opt/ros/noetic/include/rosconsole/macros_generated.h
+
+/opt/ros/noetic/include/std_msgs/Int8.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
 
 /opt/ros/noetic/include/xmlrpcpp/XmlRpcDecl.h
 ros/macros.h
