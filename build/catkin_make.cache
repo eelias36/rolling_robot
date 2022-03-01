@@ -1,2 +1,2 @@
-actuator_control:rolling_robot_control:rolling_robot_description:rolling_robot_gazebo
+actuator_control:planner:rolling_robot_control:rolling_robot_description:rolling_robot_gazebo
 -DCATKIN_DEVEL_PREFIX=/home/eric/rolling_robot/devel -DCMAKE_INSTALL_PREFIX=/home/eric/rolling_robot/install -G Unix Makefiles

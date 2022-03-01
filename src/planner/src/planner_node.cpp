@@ -11,24 +11,12 @@ main( int argc, char* argv[] ){
 	ros::init( argc, argv, "planner_node" );
 	ros::NodeHandle node_handle;
 
-	ros::Publisher joint_command_publishers[8];
-
-	for(int i = 1; i < 9; i++) {
-		string topicName = "rolling_robot/joint" + to_string(i) + "_position_controller/command";
-		joint_command_publishers[i] = node_handle.advertise< std_msgs::Float64 >( topicName, 1);
-	}
+	ros::Subscriber subscriber_reset_odometry = node_handle.subscribe( "/gazebo/link_states",1, &Planner::handleGazeboState, &planner );
 
 	double frequency = 10;
 	ros::Rate timer( frequency );
 
-	actuators.home();
-	actuators.update_command_msgs();
-
-	ros::Duration(2.0).sleep();
-
 	while( ros::ok() ){
-
-		actuators.update_command_msgs();
 		ros::spinOnce();
 		timer.sleep();
 	}
