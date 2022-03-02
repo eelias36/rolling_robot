@@ -4,6 +4,8 @@
 actuator_control/CMakeFiles/actuator_control.dir/src/actuator_control/actuator_control.cpp.o
  /home/eric/rolling_robot/src/actuator_control/include/actuator_control/actuator_control.h
  /home/eric/rolling_robot/src/actuator_control/src/actuator_control/actuator_control.cpp
+ /opt/ros/noetic/include/geometry_msgs/Twist.h
+ /opt/ros/noetic/include/geometry_msgs/Vector3.h
  /opt/ros/noetic/include/ros/advertise_options.h
  /opt/ros/noetic/include/ros/advertise_service_options.h
  /opt/ros/noetic/include/ros/assert.h
@@ -61,6 +63,7 @@ actuator_control/CMakeFiles/actuator_control.dir/src/actuator_control/actuator_c
  /opt/ros/noetic/include/ros/wall_timer_options.h
  /opt/ros/noetic/include/rosconsole/macros_generated.h
  /opt/ros/noetic/include/std_msgs/Float64.h
+ /opt/ros/noetic/include/std_msgs/Int8.h
  /opt/ros/noetic/include/std_msgs/String.h
  /opt/ros/noetic/include/xmlrpcpp/XmlRpcDecl.h
  /opt/ros/noetic/include/xmlrpcpp/XmlRpcValue.h

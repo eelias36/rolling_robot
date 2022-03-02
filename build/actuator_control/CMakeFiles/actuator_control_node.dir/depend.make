@@ -3,6 +3,8 @@
 
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /home/eric/rolling_robot/src/actuator_control/include/actuator_control/actuator_control.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /home/eric/rolling_robot/src/actuator_control/src/actuator_control_node.cpp
+actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/geometry_msgs/Twist.h
+actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/geometry_msgs/Vector3.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/ros/advertise_options.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/ros/advertise_service_options.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/ros/assert.h
@@ -60,6 +62,7 @@ actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/ros/wall_timer_options.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/rosconsole/macros_generated.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/std_msgs/Float64.h
+actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/std_msgs/Int8.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/xmlrpcpp/XmlRpcDecl.h
 actuator_control/CMakeFiles/actuator_control_node.dir/src/actuator_control_node.cpp.o: /opt/ros/noetic/include/xmlrpcpp/XmlRpcValue.h
 
