@@ -15,6 +15,7 @@ class Actuators {
 		void handle_command(const geometry_msgs::Twist::ConstPtr& msg);
 		void handle_faceState(const std_msgs::Int8::ConstPtr& msg);
 		void roll_fwd_update(void);
+		void roll_side_update(void);
 		void home(void);
 		void actuator_position_update(void);
 		std_msgs::Float64 command_msgs[16];

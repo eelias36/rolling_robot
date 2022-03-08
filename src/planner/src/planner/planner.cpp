@@ -15,8 +15,15 @@ Planner::Planner() {
 	_face_norm_vectors_initial[5] << 0, -1, 1;
 	_face_norm_vectors_initial[6] << 0, -1, 0;
 	_face_norm_vectors_initial[7] << 0, -1, -1;
+	_face_norm_vectors_initial[8] << 1, 0, -1;
+	_face_norm_vectors_initial[9] << 1, 0, 0;
+	_face_norm_vectors_initial[10] << 1, 0, 1;
+	_face_norm_vectors_initial[11] << -1, 0, 1;
+	_face_norm_vectors_initial[12] << -1, 0, 0;
+	_face_norm_vectors_initial[13] << -1, 0, -1;
 
-	for (int i = 0; i < 8; i++) {
+
+	for (int i = 0; i < 14; i++) {
 		_face_norm_vectors_initial[i].normalize();
 	}
 }
@@ -53,7 +60,7 @@ void Planner::findFaceState (void) {
 	static Eigen::Vector3d v(0, 0, -1);
 	static int _faceState_temp = -1;
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 14; i++) {
 		_face_norm_vectors[i] = eigen_quat * _face_norm_vectors_initial[i];
 		//cout << "Face Normal Vector" << i << ": " << face_norm_vectors[i] << endl;
 

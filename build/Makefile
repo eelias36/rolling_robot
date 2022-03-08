@@ -285,6 +285,19 @@ gtest/fast:
 .PHONY : gtest/fast
 
 #=============================================================================
+# Target rules for targets named actuator_control_rollside
+
+# Build rule for target.
+actuator_control_rollside: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 actuator_control_rollside
+.PHONY : actuator_control_rollside
+
+# fast build rule for target.
+actuator_control_rollside/fast:
+	$(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollside.dir/build.make actuator_control/CMakeFiles/actuator_control_rollside.dir/build
+.PHONY : actuator_control_rollside/fast
+
+#=============================================================================
 # Target rules for targets named actuator_control_node
 
 # Build rule for target.
@@ -1385,6 +1398,7 @@ help:
 	@echo "... gmock"
 	@echo "... gtest_main"
 	@echo "... gtest"
+	@echo "... actuator_control_rollside"
 	@echo "... actuator_control_node"
 	@echo "... actuator_control"
 	@echo "... std_msgs_generate_messages_py"

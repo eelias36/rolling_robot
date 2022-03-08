@@ -168,6 +168,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+actuator_control/CMakeFiles/actuator_control_rollside.dir/rule:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f CMakeFiles/Makefile2 actuator_control/CMakeFiles/actuator_control_rollside.dir/rule
+.PHONY : actuator_control/CMakeFiles/actuator_control_rollside.dir/rule
+
+# Convenience name for target.
+actuator_control_rollside: actuator_control/CMakeFiles/actuator_control_rollside.dir/rule
+
+.PHONY : actuator_control_rollside
+
+# fast build rule for target.
+actuator_control_rollside/fast:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollside.dir/build.make actuator_control/CMakeFiles/actuator_control_rollside.dir/build
+.PHONY : actuator_control_rollside/fast
+
+# Convenience name for target.
 actuator_control/CMakeFiles/actuator_control_node.dir/rule:
 	cd /home/eric/rolling_robot/build && $(MAKE) -f CMakeFiles/Makefile2 actuator_control/CMakeFiles/actuator_control_node.dir/rule
 .PHONY : actuator_control/CMakeFiles/actuator_control_node.dir/rule
@@ -533,6 +548,33 @@ src/actuator_control_rollfwd.cpp.s:
 	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollfwd.dir/build.make actuator_control/CMakeFiles/actuator_control_rollfwd.dir/src/actuator_control_rollfwd.cpp.s
 .PHONY : src/actuator_control_rollfwd.cpp.s
 
+src/actuator_control_rollside.o: src/actuator_control_rollside.cpp.o
+
+.PHONY : src/actuator_control_rollside.o
+
+# target to build an object file
+src/actuator_control_rollside.cpp.o:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollside.dir/build.make actuator_control/CMakeFiles/actuator_control_rollside.dir/src/actuator_control_rollside.cpp.o
+.PHONY : src/actuator_control_rollside.cpp.o
+
+src/actuator_control_rollside.i: src/actuator_control_rollside.cpp.i
+
+.PHONY : src/actuator_control_rollside.i
+
+# target to preprocess a source file
+src/actuator_control_rollside.cpp.i:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollside.dir/build.make actuator_control/CMakeFiles/actuator_control_rollside.dir/src/actuator_control_rollside.cpp.i
+.PHONY : src/actuator_control_rollside.cpp.i
+
+src/actuator_control_rollside.s: src/actuator_control_rollside.cpp.s
+
+.PHONY : src/actuator_control_rollside.s
+
+# target to generate assembly for a file
+src/actuator_control_rollside.cpp.s:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f actuator_control/CMakeFiles/actuator_control_rollside.dir/build.make actuator_control/CMakeFiles/actuator_control_rollside.dir/src/actuator_control_rollside.cpp.s
+.PHONY : src/actuator_control_rollside.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -542,6 +584,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... test"
+	@echo "... actuator_control_rollside"
 	@echo "... install/local"
 	@echo "... actuator_control_node"
 	@echo "... actuator_control"
@@ -574,6 +617,9 @@ help:
 	@echo "... src/actuator_control_rollfwd.o"
 	@echo "... src/actuator_control_rollfwd.i"
 	@echo "... src/actuator_control_rollfwd.s"
+	@echo "... src/actuator_control_rollside.o"
+	@echo "... src/actuator_control_rollside.i"
+	@echo "... src/actuator_control_rollside.s"
 .PHONY : help
 
 

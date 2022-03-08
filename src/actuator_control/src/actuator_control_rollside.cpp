@@ -9,7 +9,7 @@ int
 main( int argc, char* argv[] ){
 	Actuators actuators;
 
-	ros::init( argc, argv, "control_rollfwd" );
+	ros::init( argc, argv, "control_rollside" );
 	ros::NodeHandle node_handle;
 
 	ros::Publisher joint_command_publishers[16];
@@ -28,7 +28,7 @@ main( int argc, char* argv[] ){
 	ros::Duration(2.0).sleep();
 
 	while( ros::ok() ){
-		actuators.roll_fwd_update();
+		actuators.roll_side_update();
 		actuators.update_command_msgs();
 
 		for(int i = 0; i < 16; i++) {

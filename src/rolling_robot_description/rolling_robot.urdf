@@ -193,6 +193,166 @@
     </inertial>
   </link>
 
+  <link name="link9">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 0.392699 -0" xyz="-0.094 0 -0.224703"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 0.392699 -0" xyz="-0.094 0 -0.224703"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link10">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -0.392699 -0" xyz="0.094 0 -0.224703"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -0.392699 -0" xyz="0.094 0 -0.224703"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link11">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -1.178097 0" xyz="0.221 0 -0.088000"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -1.178097 0" xyz="0.221 0 -0.088000"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link12">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -1.963495 0" xyz="0.221 0 0.088000"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -1.963495 0" xyz="0.221 0 0.088000"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link13">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -2.748894 0" xyz="0.094 0 0.224703"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 -2.748894 0" xyz="0.094 0 0.224703"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link14">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 2.748894 0" xyz="-0.094 0 0.224703"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 2.748894 0" xyz="-0.094 0 0.224703"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link15">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 1.963495 0" xyz="-0.221 0 0.088000"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 1.963495 0" xyz="-0.221 0 0.088000"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
+  <link name="link16">
+    <visual>
+      <geometry>
+        <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 1.178097 0" xyz="-0.221 0 -0.088000"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+	    <cylinder length="0.1778" radius="0.005"/>
+      </geometry>
+      <origin rpy="0 1.178097 0" xyz="-0.221 0 -0.088000"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.00026407" ixy="0.0" ixz="0.0" iyy="0.00026407" iyz="0.0" izz="0.00026407"/>
+    </inertial>
+  </link>
+
   <joint name="joint1" type="prismatic">
     <parent link="base_link"/>
     <child link="link1"/>
@@ -254,6 +414,70 @@
     <child link="link8"/>
     <origin xyz="0 0 0"/>
     <axis xyz="0 -0.923879 -0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint9" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link9"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="-0.382683 0 -0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint10" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link10"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="0.382683 0 -0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint11" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link11"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="0.923879 0 -0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint12" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link12"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="0.923879 0 0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint13" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link13"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="0.382683 0 0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint14" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link14"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="-0.382683 0 0.923880"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint15" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link15"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="-0.923879 0 0.382683"/>
+    <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
+  </joint>
+
+  <joint name="joint16" type="prismatic">
+    <parent link="base_link"/>
+    <child link="link16"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="-0.923879 0 -0.382683"/>
     <limit effort="10000000" lower="0.0" upper="0.1778" velocity="1000"/>
   </joint>
 
@@ -340,6 +564,94 @@
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor8">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran9">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint9">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor9">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran10">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint10">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor10">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran11">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint11">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor11">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran12">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint12">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor12">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran13">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint13">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor13">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran14">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint14">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor14">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran15">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint15">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor15">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran16">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint16">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor16">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>

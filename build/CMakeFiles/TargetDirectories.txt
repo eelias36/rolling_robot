@@ -38,6 +38,7 @@
 /home/eric/rolling_robot/build/actuator_control/CMakeFiles/rebuild_cache.dir
 /home/eric/rolling_robot/build/actuator_control/CMakeFiles/edit_cache.dir
 /home/eric/rolling_robot/build/actuator_control/CMakeFiles/test.dir
+/home/eric/rolling_robot/build/actuator_control/CMakeFiles/actuator_control_rollside.dir
 /home/eric/rolling_robot/build/actuator_control/CMakeFiles/install/local.dir
 /home/eric/rolling_robot/build/actuator_control/CMakeFiles/actuator_control_node.dir
 /home/eric/rolling_robot/build/actuator_control/CMakeFiles/actuator_control.dir

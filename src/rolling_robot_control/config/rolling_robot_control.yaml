@@ -37,3 +37,35 @@ rolling_robot:
     type: effort_controllers/JointPositionController
     joint: joint8
     pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint9_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint9
+    pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint10_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint10
+    pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint11_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint11
+    pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint12_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint12
+    pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint13_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint13
+    pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint14_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint14
+    pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint15_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint15
+    pid: {p: 1500.0, i: 100.0, d: 100.0}
+  joint16_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint16
+    pid: {p: 1500.0, i: 100.0, d: 100.0}

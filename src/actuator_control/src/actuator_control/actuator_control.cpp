@@ -122,14 +122,14 @@ void Actuators::actuator_position_update(void) {
 }
 
 void Actuators::home(void) {
-	for( int i=0;i<15;i++ ) {
+	for( int i=0;i<16;i++ ) {
 		_commanded_pos[i] = 0;
 	}
 	return;
 }
 
 void Actuators::update_command_msgs(void) {
-	for( int i=0;i<15;i++ ) {
+	for( int i=0;i<16;i++ ) {
 		command_msgs[i].data = (float) _commanded_pos[i];
 	}
 	return;
@@ -167,7 +167,48 @@ void Actuators::roll_fwd_update(void) {
 		_commanded_pos[7] = stroke - (_counter-480)/60.0*stroke;
 	}
 
-	for( int i=0;i<8;i++ ) {
+	for( int i=0;i<16;i++ ) {
+		cout<< "actuator " + to_string(i+1) + ": " + to_string(_commanded_pos[i]) << endl;
+	}
+	cout << endl;
+
+	_counter++;
+	return;
+}
+
+void Actuators::roll_side_update(void) {
+	float static stroke = 0.5;
+
+	if ( (_counter > 540) | (_counter < 0) ) {
+		_counter = 0;
+	} else if ( _counter < 60 ) {
+		_commanded_pos[8] = _counter/60.0*stroke;
+	} else if ( _counter < 120 ){
+		_commanded_pos[8] = stroke - (_counter-60)/60.0*stroke;
+		_commanded_pos[9] = (_counter-60)/60.0*stroke;
+	} else if ( _counter < 180 ){
+		_commanded_pos[9] = stroke - (_counter-120)/60.0*stroke;
+		_commanded_pos[10] = (_counter-120)/60.0*stroke;
+	} else if ( _counter < 240 ){
+		_commanded_pos[10] = stroke - (_counter-180)/60.0*stroke;
+		_commanded_pos[11] = (_counter-180)/60.0*stroke;
+	} else if ( _counter < 300 ){
+		_commanded_pos[11] = stroke - (_counter-240)/60.0*stroke;
+		_commanded_pos[12] = (_counter-240)/60.0*stroke;
+	} else if ( _counter < 360 ){
+		_commanded_pos[12] = stroke - (_counter-300)/60.0*stroke;
+		_commanded_pos[13] = (_counter-300)/60.0*stroke;
+	} else if ( _counter < 420 ){
+		_commanded_pos[13] = stroke - (_counter-360)/60.0*stroke;
+		_commanded_pos[14] = (_counter-360)/60.0*stroke;
+	} else if ( _counter < 480 ){
+		_commanded_pos[14] = stroke - (_counter-420)/60.0*stroke;
+		_commanded_pos[15] = (_counter-420)/60.0*stroke;
+	} else {
+		_commanded_pos[15] = stroke - (_counter-480)/60.0*stroke;
+	}
+
+	for( int i=0;i<16;i++ ) {
 		cout<< "actuator " + to_string(i+1) + ": " + to_string(_commanded_pos[i]) << endl;
 	}
 	cout << endl;
