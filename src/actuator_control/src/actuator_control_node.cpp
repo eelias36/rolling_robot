@@ -16,7 +16,7 @@ main( int argc, char* argv[] ){
 	ros::Subscriber command_subscriber = node_handle.subscribe( "rolling_robot/commanded_vel", 1, &Actuators::handle_command, &actuators );
 	ros::Subscriber faceState_subscriber = node_handle.subscribe( "rolling_robot/face_state", 1, &Actuators::handle_faceState, &actuators );
 
-	for(int i = 1; i < 9; i++) {
+	for(int i = 1; i < 17; i++) {
 		string topicName = "rolling_robot/joint" + to_string(i) + "_position_controller/command";
 		joint_command_publishers[i] = node_handle.advertise< std_msgs::Float64 >( topicName, 1);
 	}
@@ -33,7 +33,7 @@ main( int argc, char* argv[] ){
 	while( ros::ok() ){
 		actuators.actuator_position_update();
 		actuators.update_command_msgs();
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < 16; i++) {
 			joint_command_publishers[i+1].publish( actuators.command_msgs[i] );
 		}
 		ros::spinOnce();

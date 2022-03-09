@@ -12,52 +12,46 @@ Actuators::Actuators() {
 	_rolling = false;
 	_commanded_actuator = -1;
 
-/*
-	// first index: current face
-	// second index: desired face
-	// entry: actuator to be commanded
-	_actuator_command_matrix = {{-1,1,-1,-1,-1,-1,-1,2,-1,-1,-1,-1,-1,-1,-1,-1}, // face 0 to face _
-										{3,-1,2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, // face 1 to face _
-										{-1,4,-1,3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,5,-1,4,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,6,-1,5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,7,-1,6,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,8,-1,7,-1,-1,-1,-1,-1,-1,-1,-1},
-										{8,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-										{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}}
-*/
-
 	// first index: current face
 	// second index: commanded velocity [forward, back, left, right]
 	// entry: actuator to be commanded
-	for (int i = 0; i < 16; i++){
+	for (int i = 0; i < 14; i++){
 		for (int j = 0; j < 4; j++){
-			_actuator_command_matrix[i][j] = -1;
+			_actuator_command_LUT[i][j] = -1;
 		}
 	}
-	_actuator_command_matrix[0][0] = 0;
-	_actuator_command_matrix[0][1] = 1;
-	_actuator_command_matrix[1][0] = 1;
-	_actuator_command_matrix[1][1] = 2;
-	_actuator_command_matrix[2][0] = 2;
-	_actuator_command_matrix[2][1] = 3;
-	_actuator_command_matrix[3][0] = 3;
-	_actuator_command_matrix[3][1] = 4;
-	_actuator_command_matrix[4][0] = 4;
-	_actuator_command_matrix[4][1] = 5;
-	_actuator_command_matrix[5][0] = 5;
-	_actuator_command_matrix[5][1] = 6;
-	_actuator_command_matrix[6][0] = 6;
-	_actuator_command_matrix[6][1] = 7;
-	_actuator_command_matrix[7][0] = 7;
-	_actuator_command_matrix[7][1] = 0;
+	_actuator_command_LUT[0][0] = 0;
+	_actuator_command_LUT[0][1] = 1;
+	_actuator_command_LUT[0][2] = 9;
+	_actuator_command_LUT[0][3] = 8;
+	_actuator_command_LUT[1][0] = 1;
+	_actuator_command_LUT[1][1] = 2;
+	_actuator_command_LUT[2][0] = 2;
+	_actuator_command_LUT[2][1] = 3;
+	_actuator_command_LUT[3][0] = 3;
+	_actuator_command_LUT[3][1] = 4;
+	_actuator_command_LUT[4][0] = 4;
+	_actuator_command_LUT[4][1] = 5;
+	_actuator_command_LUT[4][2] = 12;
+	_actuator_command_LUT[4][3] = 13;
+	_actuator_command_LUT[5][0] = 5;
+	_actuator_command_LUT[5][1] = 6;
+	_actuator_command_LUT[6][0] = 6;
+	_actuator_command_LUT[6][1] = 7;
+	_actuator_command_LUT[7][0] = 7;
+	_actuator_command_LUT[7][1] = 0;
+	_actuator_command_LUT[8][2] = 10;
+	_actuator_command_LUT[8][3] = 9;
+	_actuator_command_LUT[9][2] = 11;
+	_actuator_command_LUT[9][3] = 10;
+	_actuator_command_LUT[10][2] = 12;
+	_actuator_command_LUT[10][3] = 11;
+	_actuator_command_LUT[11][2] = 14;
+	_actuator_command_LUT[11][3] = 13;
+	_actuator_command_LUT[12][2] = 15;
+	_actuator_command_LUT[12][3] = 14;
+	_actuator_command_LUT[13][2] = 8;
+	_actuator_command_LUT[13][3] = 15;
 }
 
 Actuators::~Actuators() {
@@ -80,18 +74,15 @@ void Actuators::handle_faceState(const std_msgs::Int8::ConstPtr& msg) {
 
 void Actuators::evaluate_command(void) {
 	if (_commanded_vel.x > 0) {
-		_commanded_actuator = _actuator_command_matrix[_faceState][0];
-		_rolling = true;
+		_commanded_actuator = _actuator_command_LUT[_faceState][0];
 	} else if (_commanded_vel.x < 0) {
-		_commanded_actuator = _actuator_command_matrix[_faceState][1];
-		_rolling = true;
+		_commanded_actuator = _actuator_command_LUT[_faceState][1];
 	} else if (_commanded_vel.y > 0) {
-		_commanded_actuator = _actuator_command_matrix[_faceState][2];
-		_rolling = true;
+		_commanded_actuator = _actuator_command_LUT[_faceState][2];
 	} else if(_commanded_vel.y < 0) {
-		_commanded_actuator = _actuator_command_matrix[_faceState][3];
-		_rolling = true;
+		_commanded_actuator = _actuator_command_LUT[_faceState][3];
 	}
+	_rolling = (_commanded_actuator != -1);
 	return;
 }
 
@@ -110,6 +101,7 @@ void Actuators::actuator_position_update(void) {
 	if (_rolling == true) {
 		if ( (_counter > 60) | (_counter < 0) ) {
 			_rolling = false;
+			_commanded_actuator = -1;
 			_counter = 0;
 		} else if ( _counter < 30 ) {
 			_commanded_pos[_commanded_actuator] = _counter/30.0*_maxStroke;

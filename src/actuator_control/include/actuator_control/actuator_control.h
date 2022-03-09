@@ -23,10 +23,9 @@ class Actuators {
 	protected:
 		void evaluate_command();
 
-
 		double _commanded_pos[16];
 		float _counter;
-		int _actuator_command_matrix[16][4];
+		int _actuator_command_LUT[16][4];
 		int _commanded_actuator;
 		bool _rolling;
 		geometry_msgs::Vector3 _commanded_vel;

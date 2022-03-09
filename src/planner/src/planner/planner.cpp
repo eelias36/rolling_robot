@@ -64,11 +64,11 @@ void Planner::findFaceState (void) {
 		_face_norm_vectors[i] = eigen_quat * _face_norm_vectors_initial[i];
 		//cout << "Face Normal Vector" << i << ": " << face_norm_vectors[i] << endl;
 
-		_face_angles[i] = acos(_face_norm_vectors[i].dot(v));
-		cout << "Face Normal Angle " << i << ": " << _face_angles[i] << endl;
+		_cos_face_angles[i] = _face_norm_vectors[i].dot(v);
+		cout << "Cos of Face Normal Angle " << i << ": " << _cos_face_angles[i] << endl;
 
-		// check if angle is less than 20 degrees
-		if(_face_angles[i] < 0.349066) {
+		// check if cos(20 deg) is less than cos(angle between face normal and down)
+		if(0.9396926207859083840541 < _cos_face_angles[i]) {
 			_faceState_temp = i;
 			break;
 		}

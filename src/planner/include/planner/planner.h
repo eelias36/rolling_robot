@@ -17,9 +17,11 @@ class Planner {
 
 	protected:
 		geometry_msgs::Pose _pose;
-		Eigen::Vector3d _face_norm_vectors_initial[8];
-		Eigen::Vector3d _face_norm_vectors[8];
-		double _face_angles[8];
+		Eigen::Vector3d _face_norm_vectors_initial[14];
+		Eigen::Vector3d _face_norm_vectors[14];
+		Eigen::Vector3d _face_fwd_vectors_initial[14];
+		Eigen::Vector3d _dir_vectors[4];
+		double _cos_face_angles[14];
 		
 
 };
