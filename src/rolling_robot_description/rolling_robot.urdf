@@ -657,6 +657,62 @@
     </actuator>
   </transmission>
 
+	<link name="uwb_link1">
+	  <inertial>
+		<mass value="0.00001"/>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+		<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+	  </inertial>
+	  <visual>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+		<geometry>
+		  <box size="0.01 0.01 0.01"/>
+		</geometry>
+	  </visual>
+	  <collision>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+		<geometry>
+		  <box size=".01 .01 .01"/>
+		</geometry>
+	  </collision>
+	</link>
+
+	<link name="uwb_link2">
+	  <inertial>
+		<mass value="0.00001"/>
+		<origin rpy="0 0 0" xyz="-0 0 0"/>
+		<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+	  </inertial>
+	  <visual>
+		<origin rpy="0 0 0" xyz="-0 0 0"/>
+		<geometry>
+		  <box size="0.01 0.01 0.01"/>
+		</geometry>
+	  </visual>
+	  <collision>
+		<origin rpy="0 0 0" xyz="-0 0 0"/>
+		<geometry>
+		  <box size="0.01 0.01 0.01"/>
+		</geometry>
+	  </collision>
+	</link>
+
+  <joint name="uwb_joint1" type="revolute">
+     <parent link="base_link"/>
+     <child link="uwb_link1"/>
+     <origin xyz="0.2 0 0" rpy="0 0 0"/>
+     <limit lower="0" upper="0" effort="0" velocity="0"/>
+     <axis xyz="0 0 0"/>
+   </joint>
+
+  <joint name="uwb_joint2" type="revolute">
+     <parent link="base_link"/>
+     <child link="uwb_link2"/>
+     <origin xyz="-0.2 0 0" rpy="0 0 0"/>
+     <limit lower="0" upper="0" effort="0" velocity="0"/>
+     <axis xyz="0 0 0"/>
+   </joint>
+
 	<link name="imu_link">
 	  <inertial>
 		<mass value="0.001"/>
@@ -666,20 +722,23 @@
 	  <visual>
 		<origin rpy="0 0 0" xyz="0 0 0"/>
 		<geometry>
-		  <box size="0.001 0.001 0.001"/>
+		  <box size="0.01 0.01 0.01"/>
 		</geometry>
 	  </visual>
 	  <collision>
 		<origin rpy="0 0 0" xyz="0 0 0"/>
 		<geometry>
-		  <box size=".001 .001 .001"/>
+		  <box size=".01 .01 .01"/>
 		</geometry>
 	  </collision>
 	</link>
 
-  <joint name="imu_joint" type="fixed">
+  <joint name="imu_joint" type="revolute">
      <parent link="base_link"/>
      <child link="imu_link"/>
+     <origin xyz="0 0 0" rpy="0 0 0"/>
+     <limit lower="0" upper="0" effort="0" velocity="0"/>
+     <axis xyz="0 0 0"/>
    </joint>
 
   <gazebo reference="imu_link">

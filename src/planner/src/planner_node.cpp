@@ -11,7 +11,7 @@ main( int argc, char* argv[] ){
 	ros::init( argc, argv, "planner_node" );
 	ros::NodeHandle node_handle;
 
-	ros::Subscriber subscriber_reset_odometry = node_handle.subscribe( "/gazebo/link_states",1, &Planner::handleGazeboState, &planner );
+	ros::Subscriber link_states_subscriber = node_handle.subscribe( "/gazebo/link_states",1, &Planner::handleGazeboState, &planner );
 	ros::Publisher faceState_publisher = node_handle.advertise< std_msgs::Int8 >( "rolling_robot/face_state", 1, true );
 
 	double frequency = 10;

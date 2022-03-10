@@ -134,9 +134,11 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/eric/rolling_robot/build/actuator_control/cmake_install.cmake")
   include("/home/eric/rolling_robot/build/planner/cmake_install.cmake")
   include("/home/eric/rolling_robot/build/rolling_robot_launch/cmake_install.cmake")
+  include("/home/eric/rolling_robot/build/state_estimation/cmake_install.cmake")
   include("/home/eric/rolling_robot/build/rolling_robot_description/cmake_install.cmake")
   include("/home/eric/rolling_robot/build/rolling_robot_gazebo/cmake_install.cmake")
   include("/home/eric/rolling_robot/build/rolling_robot_control/cmake_install.cmake")
+  include("/home/eric/rolling_robot/build/uwb_interface/cmake_install.cmake")
 
 endif()
 
