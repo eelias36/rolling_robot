@@ -7,6 +7,7 @@
 subdirs("gtest")
 subdirs("actuator_control")
 subdirs("planner")
+subdirs("rolling_robot_launch")
 subdirs("rolling_robot_description")
 subdirs("rolling_robot_gazebo")
 subdirs("rolling_robot_control")

@@ -56,6 +56,7 @@ CMAKE_BINARY_DIR = /home/eric/rolling_robot/build
 all: gtest/all
 all: actuator_control/all
 all: planner/all
+all: rolling_robot_launch/all
 all: rolling_robot_description/all
 all: rolling_robot_gazebo/all
 all: rolling_robot_control/all
@@ -66,6 +67,7 @@ all: rolling_robot_control/all
 preinstall: gtest/preinstall
 preinstall: actuator_control/preinstall
 preinstall: planner/preinstall
+preinstall: rolling_robot_launch/preinstall
 preinstall: rolling_robot_description/preinstall
 preinstall: rolling_robot_gazebo/preinstall
 preinstall: rolling_robot_control/preinstall
@@ -81,6 +83,7 @@ clean: CMakeFiles/download_extra_data.dir/clean
 clean: gtest/clean
 clean: actuator_control/clean
 clean: planner/clean
+clean: rolling_robot_launch/clean
 clean: rolling_robot_description/clean
 clean: rolling_robot_gazebo/clean
 clean: rolling_robot_control/clean
@@ -317,6 +320,24 @@ rolling_robot_gazebo/preinstall:
 rolling_robot_gazebo/clean:
 
 .PHONY : rolling_robot_gazebo/clean
+
+#=============================================================================
+# Directory level rules for directory rolling_robot_launch
+
+# Recursive "all" directory target.
+rolling_robot_launch/all:
+
+.PHONY : rolling_robot_launch/all
+
+# Recursive "preinstall" directory target.
+rolling_robot_launch/preinstall:
+
+.PHONY : rolling_robot_launch/preinstall
+
+# Recursive "clean" directory target.
+rolling_robot_launch/clean:
+
+.PHONY : rolling_robot_launch/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/doxygen.dir

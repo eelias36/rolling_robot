@@ -1,0 +1,15 @@
+<launch>
+  <include file="$(find rolling_robot_gazebo)/launch/rolling_robot.launch" />
+  <include file="$(find rolling_robot_control)/launch/rolling_robot_control.launch" />
+
+  <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter">
+    <rosparam>
+      gain: 0.1
+      zeta: 0.001
+      publish_tf: true
+      use_mag: false
+      use_magnetic_field_msg: false
+    </rosparam>
+  </node>
+
+</launch>
