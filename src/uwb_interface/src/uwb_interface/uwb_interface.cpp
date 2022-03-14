@@ -17,28 +17,36 @@ void Uwb_interface::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& 
 
 	_uwb_pos[0].x() = msg->pose[19].position.x;
 	_uwb_pos[0].y() = msg->pose[19].position.y;
+	_uwb_pos[0].z() = msg->pose[19].position.z;
+
 	_uwb_pos[1].x() = msg->pose[20].position.x;
 	_uwb_pos[1].y() = msg->pose[20].position.y;
+	_uwb_pos[1].z() = msg->pose[20].position.z;
+
+	_uwb_pos[2].x() = msg->pose[21].position.x;
+	_uwb_pos[2].y() = msg->pose[21].position.y;
+	_uwb_pos[2].z() = msg->pose[21].position.z;
 
 	cout << "____________________" << endl;
 	cout << msg->name[19] << endl;
-	cout << "x1: " << _uwb_pos[0].x() << endl;	
-	cout << "y1: " << _uwb_pos[0].y() << endl << endl;
+	cout<< _uwb_pos[0] << endl << endl;
 	cout << msg->name[20] << endl;
-	cout << "x2: " << _uwb_pos[1].x() << endl;	
-	cout << "y2: " << _uwb_pos[1].y() << endl << endl;	
+	cout<< _uwb_pos[1] << endl << endl;
+	cout << msg->name[21] << endl;
+	cout<< _uwb_pos[2] << endl << endl;
 
 	return;
 }
 
 geometry_msgs::PoseArray Uwb_interface::uwb_pose_msg(void) const{
 	geometry_msgs::PoseArray msg;
-	msg.poses.resize(2);
+	msg.poses.resize(3);
 
 	msg.header.stamp = ros::Time::now();
-	for(int i=0; i<2; i++) {
+	for(int i=0; i<3; i++) {
 		msg.poses[i].position.x = _uwb_pos[i].x();
 		msg.poses[i].position.y = _uwb_pos[i].y();
+		msg.poses[i].position.z = _uwb_pos[i].z();
 	}
 
 	return msg;

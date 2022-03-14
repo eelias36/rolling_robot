@@ -1,30 +1,36 @@
-#ifndef STATE_LOCALIZATION_H
-#define STATE_LOCALIZATION_H
+#ifndef STATE_ESTIMATION_H
+#define STATE_ESTIMATION_H
 
 #include <iostream>
 #include <Eigen/Dense>
-#include "sensor_msgs/Imu.h"
+#include "sensor_msgs/MagneticField.h"
+#include "geometry_msgs/PoseArray.h"
 
-class State_Localization {
+
+class State_Estimation {
 	public:
-		State_Localization( const Eigen::VectorXd& mu = Eigen::VectorXd::Zero( 6 ),
-		const Eigen::MatrixXd& q = Eigen::MatrixXd::Zero( 3, 3 ) );
-		virtual ˜EKF_Localization();
-		void handle_imu_msgs( const sensor_msgs::Imu::ConstPtr& msg );
-		void handle_uwb_msgs( const nav_msgs::Odometry::ConstPtr& msg );
-		void handle_direction_msgs( const int msg );
-		void step( const double& dt );
-		nav_msgs::Odometry estimated_odometry( void )const;
+		State_Estimation();
+		// State_Estimation( const Eigen::VectorXd& mu = Eigen::VectorXd::Zero( 6 ),
+		// 	const Eigen::MatrixXd& q = Eigen::MatrixXd::Zero( 3, 3 ) );
+		virtual ~State_Estimation();
+		// void handle_imu_msg( const sensor_msgs::Imu::ConstPtr& msg );
+		void handle_uwb_msg( const geometry_msgs::PoseArray::ConstPtr& msg );
+		// void handle_direction_msgs( const int msg );
+		// void step( const double& dt );
+		// nav_msgs::Odometry estimated_odometry( void )const;
+		sensor_msgs::MagneticField mag_field_msg(void) const;
 
 	protected:
-		geometry_msgs::Twist _u;
-		perception::Observations _z;
-		Eigen::Vector2d _mu_xy;
-		Eigen::Quaterniond _mu_quat;
-		Eigen::MatrixXd _sigma;
-		Eigen::VectorXd _alpha;
-		Eigen::MatrixXd _q;
+		// geometry_msgs::Twist _u;
+		// perception::Observations _z;
+		// Eigen::Vector2d _mu_xy;
+		// Eigen::Quaterniond _mu_quat;
+		// Eigen::MatrixXd _sigma;
+		// Eigen::VectorXd _alpha;
+		// Eigen::MatrixXd _q;
+		Eigen::Vector3d _uwb_vec[2];
+		// sensor_msgs::Imu _imu_msg_no_mag;
 
 };
 
-#endif /* STATE_LOCALIZATION_H */
+#endif /* STATE_ESTIMATION_H */

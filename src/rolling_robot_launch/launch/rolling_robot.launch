@@ -4,11 +4,12 @@
 
   <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter">
     <rosparam>
+      world_frame: nwu
       gain: 0.1
       zeta: 0.001
       publish_tf: true
-      use_mag: false
-      use_magnetic_field_msg: false
+      use_mag: true
+      use_magnetic_field_msg: true
     </rosparam>
   </node>
 

@@ -1026,6 +1026,32 @@ sensor_msgs_generate_messages_eus/fast:
 .PHONY : sensor_msgs_generate_messages_eus/fast
 
 #=============================================================================
+# Target rules for targets named state_estimation_node
+
+# Build rule for target.
+state_estimation_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 state_estimation_node
+.PHONY : state_estimation_node
+
+# fast build rule for target.
+state_estimation_node/fast:
+	$(MAKE) -f state_estimation/CMakeFiles/state_estimation_node.dir/build.make state_estimation/CMakeFiles/state_estimation_node.dir/build
+.PHONY : state_estimation_node/fast
+
+#=============================================================================
+# Target rules for targets named state_estimation
+
+# Build rule for target.
+state_estimation: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 state_estimation
+.PHONY : state_estimation
+
+# fast build rule for target.
+state_estimation/fast:
+	$(MAKE) -f state_estimation/CMakeFiles/state_estimation.dir/build.make state_estimation/CMakeFiles/state_estimation.dir/build
+.PHONY : state_estimation/fast
+
+#=============================================================================
 # Target rules for targets named dynamic_reconfigure_generate_messages_nodejs
 
 # Build rule for target.
@@ -1481,6 +1507,8 @@ help:
 	@echo "... trajectory_msgs_generate_messages_py"
 	@echo "... sensor_msgs_generate_messages_cpp"
 	@echo "... sensor_msgs_generate_messages_eus"
+	@echo "... state_estimation_node"
+	@echo "... state_estimation"
 	@echo "... dynamic_reconfigure_generate_messages_nodejs"
 	@echo "... dynamic_reconfigure_generate_messages_lisp"
 	@echo "... dynamic_reconfigure_generate_messages_py"

@@ -68,18 +68,6 @@ install/strip/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -135,6 +123,18 @@ test/fast: test
 
 .PHONY : test/fast
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
 # The main all target
 all: cmake_check_build_system
 	cd /home/eric/rolling_robot/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/eric/rolling_robot/build/CMakeFiles /home/eric/rolling_robot/build/state_estimation/CMakeFiles/progress.marks
@@ -167,6 +167,90 @@ depend:
 	cd /home/eric/rolling_robot/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+# Convenience name for target.
+state_estimation/CMakeFiles/state_estimation_node.dir/rule:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f CMakeFiles/Makefile2 state_estimation/CMakeFiles/state_estimation_node.dir/rule
+.PHONY : state_estimation/CMakeFiles/state_estimation_node.dir/rule
+
+# Convenience name for target.
+state_estimation_node: state_estimation/CMakeFiles/state_estimation_node.dir/rule
+
+.PHONY : state_estimation_node
+
+# fast build rule for target.
+state_estimation_node/fast:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation_node.dir/build.make state_estimation/CMakeFiles/state_estimation_node.dir/build
+.PHONY : state_estimation_node/fast
+
+# Convenience name for target.
+state_estimation/CMakeFiles/state_estimation.dir/rule:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f CMakeFiles/Makefile2 state_estimation/CMakeFiles/state_estimation.dir/rule
+.PHONY : state_estimation/CMakeFiles/state_estimation.dir/rule
+
+# Convenience name for target.
+state_estimation: state_estimation/CMakeFiles/state_estimation.dir/rule
+
+.PHONY : state_estimation
+
+# fast build rule for target.
+state_estimation/fast:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation.dir/build.make state_estimation/CMakeFiles/state_estimation.dir/build
+.PHONY : state_estimation/fast
+
+src/state_estimation/state_estimation.o: src/state_estimation/state_estimation.cpp.o
+
+.PHONY : src/state_estimation/state_estimation.o
+
+# target to build an object file
+src/state_estimation/state_estimation.cpp.o:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation.dir/build.make state_estimation/CMakeFiles/state_estimation.dir/src/state_estimation/state_estimation.cpp.o
+.PHONY : src/state_estimation/state_estimation.cpp.o
+
+src/state_estimation/state_estimation.i: src/state_estimation/state_estimation.cpp.i
+
+.PHONY : src/state_estimation/state_estimation.i
+
+# target to preprocess a source file
+src/state_estimation/state_estimation.cpp.i:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation.dir/build.make state_estimation/CMakeFiles/state_estimation.dir/src/state_estimation/state_estimation.cpp.i
+.PHONY : src/state_estimation/state_estimation.cpp.i
+
+src/state_estimation/state_estimation.s: src/state_estimation/state_estimation.cpp.s
+
+.PHONY : src/state_estimation/state_estimation.s
+
+# target to generate assembly for a file
+src/state_estimation/state_estimation.cpp.s:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation.dir/build.make state_estimation/CMakeFiles/state_estimation.dir/src/state_estimation/state_estimation.cpp.s
+.PHONY : src/state_estimation/state_estimation.cpp.s
+
+src/state_estimation_node.o: src/state_estimation_node.cpp.o
+
+.PHONY : src/state_estimation_node.o
+
+# target to build an object file
+src/state_estimation_node.cpp.o:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation_node.dir/build.make state_estimation/CMakeFiles/state_estimation_node.dir/src/state_estimation_node.cpp.o
+.PHONY : src/state_estimation_node.cpp.o
+
+src/state_estimation_node.i: src/state_estimation_node.cpp.i
+
+.PHONY : src/state_estimation_node.i
+
+# target to preprocess a source file
+src/state_estimation_node.cpp.i:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation_node.dir/build.make state_estimation/CMakeFiles/state_estimation_node.dir/src/state_estimation_node.cpp.i
+.PHONY : src/state_estimation_node.cpp.i
+
+src/state_estimation_node.s: src/state_estimation_node.cpp.s
+
+.PHONY : src/state_estimation_node.s
+
+# target to generate assembly for a file
+src/state_estimation_node.cpp.s:
+	cd /home/eric/rolling_robot/build && $(MAKE) -f state_estimation/CMakeFiles/state_estimation_node.dir/build.make state_estimation/CMakeFiles/state_estimation_node.dir/src/state_estimation_node.cpp.s
+.PHONY : src/state_estimation_node.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -174,12 +258,20 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... install/strip"
-	@echo "... install/local"
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... test"
+	@echo "... install/local"
+	@echo "... state_estimation_node"
+	@echo "... state_estimation"
+	@echo "... src/state_estimation/state_estimation.o"
+	@echo "... src/state_estimation/state_estimation.i"
+	@echo "... src/state_estimation/state_estimation.s"
+	@echo "... src/state_estimation_node.o"
+	@echo "... src/state_estimation_node.i"
+	@echo "... src/state_estimation_node.s"
 .PHONY : help
 
 

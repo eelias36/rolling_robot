@@ -16,7 +16,7 @@ class Uwb_interface {
 		geometry_msgs::PoseArray uwb_pose_msg(void) const;
 
 	protected:
-		Eigen::Vector2d _uwb_pos[2];
+		Eigen::Vector3d _uwb_pos[3];
 
 };
 
