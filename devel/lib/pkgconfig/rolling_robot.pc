@@ -1,8 +1,0 @@
-prefix=/home/eelias/rolling_robot/devel
-
-Name: rolling_robot
-Description: Description of rolling_robot
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
