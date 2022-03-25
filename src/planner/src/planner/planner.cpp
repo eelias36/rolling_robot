@@ -7,7 +7,7 @@
 using namespace std;
 
 Planner::Planner() {
-	faceState_msg.data = -1;
+	_face_state = -1;
 	_face_norm_vectors_initial[0] << 0, 0, -1;
 	_face_norm_vectors_initial[1] << 0, 1, -1;
 	_face_norm_vectors_initial[2] << 0, 1, 0;
@@ -66,8 +66,9 @@ Planner::Planner() {
 	// map array entry: face state
 	// key: commanded direction [forward, back, left, right]
 	// value: face norm vector index
+	std::map<int, int>::iterator itr;
 	for (int i = 0; i < 14; i++) {
-		for (itr = _vector_direction_map.begin(); itr != _vector_direction_map.end(); ++itr) {
+		for (itr = _vector_direction_map[i].begin(); itr != _vector_direction_map[i].end(); ++itr) {
 			_inv_vector_direction_map[i].insert(pair<int,int>( itr->second, itr->first ));
     	}
 	}
@@ -127,7 +128,7 @@ void Planner::findFaceState (void) {
 }
 
 std_msgs::Int8 Planner::faceState_msg(void) {
-	std_msgs::Int8 msg
+	std_msgs::Int8 msg;
 	msg.data = _face_state;
 	return msg;
 }
@@ -148,4 +149,5 @@ std_msgs::Float64 Planner::heading_msg(void) {
 	cout << "heading: " << heading << endl;
 
 	msg.data = heading;
+	return msg;
 }

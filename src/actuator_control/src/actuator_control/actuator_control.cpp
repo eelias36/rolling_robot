@@ -224,6 +224,6 @@ std_msgs::Int8 Actuators::cmd_dir_msg(void){
 std_msgs::Bool Actuators::rolling_msg(void) {
 	std_msgs::Bool msg;
 
-	msg.data = _rolling
+	msg.data = _rolling;
 	return msg;
 }

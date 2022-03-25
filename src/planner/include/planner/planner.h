@@ -26,8 +26,8 @@ class Planner {
 		Eigen::Vector3d _face_fwd_vectors_initial[14];
 		Eigen::Vector3d _dir_vectors[4];
 		double _cos_face_angles[14];
-		map<int, int> _vector_direction_map[14];
-		map<int, int> _inv_vector_direction_map[14];
+		std::map<int, int> _vector_direction_map[14];
+		std::map<int, int> _inv_vector_direction_map[14];
 		int _cmd_dir;
 		int _face_state;
 

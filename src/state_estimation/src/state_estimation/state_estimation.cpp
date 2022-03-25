@@ -21,8 +21,8 @@ void State_Estimation::handle_heading_msg( const std_msgs::Float64::ConstPtr& ms
 	return;
 }
 
-void State_Estimation::handle_rolling_msg( const std_msgs::Bool& msg) {
-	_rolling = *msg;
+void State_Estimation::handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg) {
+	_rolling = (*msg).data;
 	return;
 }
 
@@ -45,7 +45,7 @@ void State_Estimation::handle_uwb_msg( const geometry_msgs::PoseArray::ConstPtr&
 	return;
 }
 
-void State_Estimation::handle_imu_msg( const sensor_msgs::MagneticField::ConstPtr& msg ) {
+void State_Estimation::handle_imu_msg( const sensor_msgs::Imu::ConstPtr& msg ) {
 	_orientation = *msg;
 	return;
 }
@@ -111,12 +111,11 @@ void State_Estimation::step( void ) {
 		_mu_pred[1] = _mu[1] + d*sin(_u); // propagate y
 
 		// propagate covariance
-		Eigen::Matrix3d M = _alpha;
+		Eigen::Matrix3d M = _alpha.asDiagonal();
 
-		Eigen::Matrix<double, 2, 3> V {
-		      	{1, 0, -d*sin(_u)},
-		      	{0, 1, d*cos(_u)},
-		};
+		Eigen::MatrixXd V(2,3);
+		V << 	1, 0, -d*sin(_u),
+				0, 1, d*cos(_u);
 
 		// Map noise from x,y,heading in body frame to x,y state space
 		Eigen::Matrix2d R = V*M*V.transpose();

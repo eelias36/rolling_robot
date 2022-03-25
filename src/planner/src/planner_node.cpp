@@ -20,7 +20,7 @@ main( int argc, char* argv[] ){
 	ros::Rate timer( frequency );
 
 	while( ros::ok() ){
-		faceState_publisher.publish( planner.faceState_msg );
+		faceState_publisher.publish( planner.faceState_msg() );
 		heading_publisher.publish( planner.heading_msg() );
 
 		ros::spinOnce();
