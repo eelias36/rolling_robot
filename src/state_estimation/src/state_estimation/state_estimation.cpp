@@ -87,19 +87,19 @@ sensor_msgs::MagneticField State_Estimation::mag_field_msg(void) const {
 void State_Estimation::step( void ) {
 
 	// distance travelled with each roll
-	double d = 1;
+	double d = 0.25;
 
 	// prediction step
 	Eigen::Vector2d _mu_pred;
 	Eigen::Matrix2d _sigma_pred;
 
 	if (_rolling == false && (_EKF_roll_step_complete == true)) {
-		cout << "state prediction staying the same" << endl;
+		//cout << "state prediction staying the same" << endl;
 		// if not rolling, predicted state is the same as the current state
 		_mu_pred = _mu;
 
 	} else if(_rolling == true) {
-		cout << "state prediction staying the same" << endl;
+		//cout << "state prediction staying the same" << endl;
 		// if rolling, do not run prediction step
 		_EKF_roll_step_complete = false;
 

@@ -20,8 +20,8 @@ class Actuators {
 		void home(void);
 		void actuator_position_update(void);
 		std_msgs::Float64 command_msgs[16];
-		std_msgs::Int8 cmd_dir_msg(void);
 		std_msgs::Bool rolling_msg(void);
+		ros::Publisher cmd_dir_publisher;
 
 	protected:
 		void evaluate_command();

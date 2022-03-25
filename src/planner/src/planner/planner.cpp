@@ -25,13 +25,14 @@ Planner::Planner() {
 
 	for (int i = 0; i < 14; i++) {
 		_face_norm_vectors_initial[i].normalize();
+		_face_norm_vectors[i] = _face_norm_vectors_initial[i];
 	}
 
 	// map array entry: face state
 	// key: face norm vector index
 	// value: commanded direction [forward, back, left, right]
 	_vector_direction_map[0].insert(pair<int,int>(2,0));
-	_vector_direction_map[0].insert(pair<int,int>(8,1));
+	_vector_direction_map[0].insert(pair<int,int>(6,1));
 	_vector_direction_map[0].insert(pair<int,int>(12,2));
 	_vector_direction_map[0].insert(pair<int,int>(9,3));
 	_vector_direction_map[1].insert(pair<int,int>(3,0));
@@ -81,8 +82,8 @@ Planner::~Planner() {
 void Planner::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg ) {
 	// update pose class variable
 	_pose = msg->pose[1];
-	cout << "____________________" << endl;
-	cout << _pose << endl << endl;	
+	//cout << "____________________" << endl;
+	//cout << _pose << endl << endl;	
 	findFaceState();
 
 	return;
@@ -111,7 +112,7 @@ void Planner::findFaceState (void) {
 		//cout << "Face Normal Vector" << i << ": " << face_norm_vectors[i] << endl;
 
 		_cos_face_angles[i] = _face_norm_vectors[i].dot(v);
-		cout << "Cos of Face Normal Angle " << i << ": " << _cos_face_angles[i] << endl;
+		//cout << "Cos of Face Normal Angle " << i << ": " << _cos_face_angles[i] << endl;
 
 		// check if cos(20 deg) is less than cos(angle between face normal and down)
 		if(0.9396926207859083840541 < _cos_face_angles[i]) {
@@ -122,7 +123,7 @@ void Planner::findFaceState (void) {
 	}
 	
 	_face_state = _faceState_temp;
-	cout << "Face State: " << _face_state << endl;
+	//cout << "Face State: " << _face_state << endl;
 
 	return;
 }
@@ -135,19 +136,44 @@ std_msgs::Int8 Planner::faceState_msg(void) {
 
 void Planner::handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg) {
 	_cmd_dir = msg->data;
+	
+	double heading;
+	if(_cmd_dir != -1) {
+		std_msgs::Float64 msg;
+
+		Eigen::Vector2d v(1, 0);
+		Eigen::Vector3d heading_vec_init = _face_norm_vectors[_inv_vector_direction_map[_face_state][_cmd_dir]];
+		Eigen::Vector2d heading_vec;
+		
+		heading_vec.x() = heading_vec_init.x();
+		heading_vec.y() = heading_vec_init.y();
+		heading_vec.normalize();
+
+		cout << "__________" << endl;
+		cout << "Face: " << _face_state << endl;
+		cout << "Cmd Dir: " << _cmd_dir << endl;
+		cout << "Index: " << _inv_vector_direction_map[_face_state][_cmd_dir] << endl;
+		cout << "At Index: " << _face_norm_vectors[_inv_vector_direction_map[_face_state][_cmd_dir]] << endl;
+		cout << "Heading vector: " << heading_vec << endl;
+		
+		// find angle between heading vector and x-axis
+		double angle = acos(heading_vec.dot(v)); 
+
+		double heading;
+
+		// positive heading if vector in quadrants I/II, negative if in III/IV
+		if (heading_vec.y() >= 0) {
+			heading = angle;
+		} else {
+			heading = -angle;
+		}
+
+
+		msg.data = heading;
+
+		heading_publisher.publish(msg);
+	}
+
+
 	return;
-}
-
-std_msgs::Float64 Planner::heading_msg(void) {
-	std_msgs::Float64 msg;
-
-	Eigen::Vector2d v(1, 0);
-	Eigen::Vector2d heading_vec = _face_norm_vectors[_inv_vector_direction_map[_face_state][_cmd_dir]].head<2>();
-
-	double heading = acos(heading_vec.dot(v)); // find angle between heading vector and x-axis
-
-	cout << "heading: " << heading << endl;
-
-	msg.data = heading;
-	return msg;
 }

@@ -8,9 +8,10 @@ using namespace std;
 Actuators::Actuators() {
 	_counter = 0;
 	_faceState = -1;
-	_maxStroke = 0.1778;
+	_maxStroke = 0.15;
 	_rolling = false;
 	_commanded_actuator = -1;
+	_cmd_dir = -1;
 
 	// first index: current face
 	// second index: commanded direction [forward, back, left, right]
@@ -86,8 +87,21 @@ void Actuators::evaluate_command(void) {
 		_cmd_dir = 3;
 		_commanded_actuator = _actuator_command_LUT[_faceState][3];
 	}
+
 	_rolling = (_commanded_actuator != -1);
-	_cmd_dir = _rolling;
+
+
+	if (_rolling) {
+		std_msgs::Int8 msg;
+
+		msg.data = _cmd_dir;
+
+		cmd_dir_publisher.publish( msg );
+	}
+
+	if (!_rolling) {
+		_cmd_dir = -1;
+	}
 	return;
 }
 
@@ -212,13 +226,6 @@ void Actuators::roll_side_update(void) {
 
 	_counter++;
 	return;
-}
-
-std_msgs::Int8 Actuators::cmd_dir_msg(void){
-	std_msgs::Int8 msg;
-
-	msg.data = _cmd_dir;
-	return msg;
 }
 
 std_msgs::Bool Actuators::rolling_msg(void) {

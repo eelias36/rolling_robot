@@ -17,7 +17,7 @@ class Planner {
 		void findFaceState(void);
 		void handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg);
 		std_msgs::Int8 faceState_msg(void);
-		std_msgs::Float64 heading_msg(void);
+		ros::Publisher heading_publisher;
 
 	protected:
 		geometry_msgs::Pose _pose;
@@ -30,6 +30,7 @@ class Planner {
 		std::map<int, int> _inv_vector_direction_map[14];
 		int _cmd_dir;
 		int _face_state;
+		double _heading;
 
 		
 
