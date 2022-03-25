@@ -3,7 +3,9 @@
 
 #include "ros/ros.h"
 #include <Eigen/Dense>
+#include <map>
 #include "std_msgs/Int8.h"
+#include "std_msgs/Float64.h"
 #include "geometry_msgs/Pose.h"
 #include "gazebo_msgs/LinkStates.h"
 
@@ -13,7 +15,9 @@ class Planner {
 		virtual ~Planner();
 		void handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg );
 		void findFaceState(void);
-		std_msgs::Int8 faceState_msg;
+		void handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg);
+		std_msgs::Int8 faceState_msg(void);
+		std_msgs::Float64 heading_msg(void);
 
 	protected:
 		geometry_msgs::Pose _pose;
@@ -22,6 +26,11 @@ class Planner {
 		Eigen::Vector3d _face_fwd_vectors_initial[14];
 		Eigen::Vector3d _dir_vectors[4];
 		double _cos_face_angles[14];
+		map<int, int> _vector_direction_map[14];
+		map<int, int> _inv_vector_direction_map[14];
+		int _cmd_dir;
+		int _face_state;
+
 		
 
 };

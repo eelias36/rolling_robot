@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/Int8.h"
+#include "std_msgs/Bool.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Vector3.h"
 
@@ -19,6 +20,8 @@ class Actuators {
 		void home(void);
 		void actuator_position_update(void);
 		std_msgs::Float64 command_msgs[16];
+		std_msgs::Int8 cmd_dir_msg(void);
+		std_msgs::Bool rolling_msg(void);
 
 	protected:
 		void evaluate_command();
@@ -31,6 +34,7 @@ class Actuators {
 		geometry_msgs::Vector3 _commanded_vel;
 		int _faceState;
 		float _maxStroke;
+		int _cmd_dir;
 
 };
 

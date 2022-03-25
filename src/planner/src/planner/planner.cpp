@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <iterator>
 #include "planner/planner.h"
 
 
@@ -22,9 +23,53 @@ Planner::Planner() {
 	_face_norm_vectors_initial[12] << -1, 0, 0;
 	_face_norm_vectors_initial[13] << -1, 0, -1;
 
-
 	for (int i = 0; i < 14; i++) {
 		_face_norm_vectors_initial[i].normalize();
+	}
+
+	// map array entry: face state
+	// key: face norm vector index
+	// value: commanded direction [forward, back, left, right]
+	_vector_direction_map[0].insert(pair<int,int>(2,0));
+	_vector_direction_map[0].insert(pair<int,int>(8,1));
+	_vector_direction_map[0].insert(pair<int,int>(12,2));
+	_vector_direction_map[0].insert(pair<int,int>(9,3));
+	_vector_direction_map[1].insert(pair<int,int>(3,0));
+	_vector_direction_map[1].insert(pair<int,int>(7,1));
+	_vector_direction_map[2].insert(pair<int,int>(4,0));
+	_vector_direction_map[2].insert(pair<int,int>(0,1));
+	_vector_direction_map[3].insert(pair<int,int>(5,0));
+	_vector_direction_map[3].insert(pair<int,int>(1,1));
+	_vector_direction_map[4].insert(pair<int,int>(6,0));
+	_vector_direction_map[4].insert(pair<int,int>(2,1));
+	_vector_direction_map[4].insert(pair<int,int>(12,2));
+	_vector_direction_map[4].insert(pair<int,int>(9,3));
+	_vector_direction_map[5].insert(pair<int,int>(7,0));
+	_vector_direction_map[5].insert(pair<int,int>(3,1));
+	_vector_direction_map[6].insert(pair<int,int>(0,0));
+	_vector_direction_map[6].insert(pair<int,int>(4,1));
+	_vector_direction_map[7].insert(pair<int,int>(1,0));
+	_vector_direction_map[7].insert(pair<int,int>(5,1));
+	_vector_direction_map[8].insert(pair<int,int>(13,2));
+	_vector_direction_map[8].insert(pair<int,int>(10,3));
+	_vector_direction_map[9].insert(pair<int,int>(0,2));
+	_vector_direction_map[9].insert(pair<int,int>(4,3));
+	_vector_direction_map[10].insert(pair<int,int>(8,2));
+	_vector_direction_map[10].insert(pair<int,int>(11,3));
+	_vector_direction_map[11].insert(pair<int,int>(10,2));
+	_vector_direction_map[11].insert(pair<int,int>(13,3));
+	_vector_direction_map[12].insert(pair<int,int>(4,2));
+	_vector_direction_map[12].insert(pair<int,int>(0,3));
+	_vector_direction_map[13].insert(pair<int,int>(11,2));
+	_vector_direction_map[13].insert(pair<int,int>(8,3));
+
+	// map array entry: face state
+	// key: commanded direction [forward, back, left, right]
+	// value: face norm vector index
+	for (int i = 0; i < 14; i++) {
+		for (itr = _vector_direction_map.begin(); itr != _vector_direction_map.end(); ++itr) {
+			_inv_vector_direction_map[i].insert(pair<int,int>( itr->second, itr->first ));
+    	}
 	}
 }
 
@@ -75,8 +120,32 @@ void Planner::findFaceState (void) {
 		
 	}
 	
-	faceState_msg.data = _faceState_temp;
-	cout << "Face State: " << (int) faceState_msg.data << endl;
+	_face_state = _faceState_temp;
+	cout << "Face State: " << _face_state << endl;
 
 	return;
+}
+
+std_msgs::Int8 Planner::faceState_msg(void) {
+	std_msgs::Int8 msg
+	msg.data = _face_state;
+	return msg;
+}
+
+void Planner::handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg) {
+	_cmd_dir = msg->data;
+	return;
+}
+
+std_msgs::Float64 Planner::heading_msg(void) {
+	std_msgs::Float64 msg;
+
+	Eigen::Vector2d v(1, 0);
+	Eigen::Vector2d heading_vec = _face_norm_vectors[_inv_vector_direction_map[_face_state][_cmd_dir]].head<2>();
+
+	double heading = acos(heading_vec.dot(v)); // find angle between heading vector and x-axis
+
+	cout << "heading: " << heading << endl;
+
+	msg.data = heading;
 }

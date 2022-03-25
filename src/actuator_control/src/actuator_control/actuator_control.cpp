@@ -13,7 +13,7 @@ Actuators::Actuators() {
 	_commanded_actuator = -1;
 
 	// first index: current face
-	// second index: commanded velocity [forward, back, left, right]
+	// second index: commanded direction [forward, back, left, right]
 	// entry: actuator to be commanded
 	for (int i = 0; i < 14; i++){
 		for (int j = 0; j < 4; j++){
@@ -74,15 +74,20 @@ void Actuators::handle_faceState(const std_msgs::Int8::ConstPtr& msg) {
 
 void Actuators::evaluate_command(void) {
 	if (_commanded_vel.x > 0) {
+		_cmd_dir = 0;
 		_commanded_actuator = _actuator_command_LUT[_faceState][0];
 	} else if (_commanded_vel.x < 0) {
+		_cmd_dir = 1;
 		_commanded_actuator = _actuator_command_LUT[_faceState][1];
 	} else if (_commanded_vel.y > 0) {
+		_cmd_dir = 2;
 		_commanded_actuator = _actuator_command_LUT[_faceState][2];
 	} else if(_commanded_vel.y < 0) {
+		_cmd_dir = 3;
 		_commanded_actuator = _actuator_command_LUT[_faceState][3];
 	}
 	_rolling = (_commanded_actuator != -1);
+	_cmd_dir = _rolling;
 	return;
 }
 
@@ -207,4 +212,18 @@ void Actuators::roll_side_update(void) {
 
 	_counter++;
 	return;
+}
+
+std_msgs::Int8 Actuators::cmd_dir_msg(void){
+	std_msgs::Int8 msg;
+
+	msg.data = _cmd_dir;
+	return msg;
+}
+
+std_msgs::Bool Actuators::rolling_msg(void) {
+	std_msgs::Bool msg;
+
+	msg.data = _rolling
+	return msg;
 }

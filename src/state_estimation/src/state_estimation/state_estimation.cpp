@@ -5,13 +5,27 @@
 
 using namespace std;
 
-State_Estimation::State_Estimation() {
+State_Estimation::State_Estimation(const Eigen::Vector3d& alpha) :  _u(),
+																	_mu( Eigen::Vector2d::Zero( 2 ) ),
+																	_sigma( Eigen::Matrix2d::Zero( 2, 2 ) ),
+																	_alpha( alpha ){
 
 }
 
 State_Estimation::~State_Estimation() {
 
 }
+
+void State_Estimation::handle_heading_msg( const std_msgs::Float64::ConstPtr& msg ) {
+	_u = (*msg).data;
+	return;
+}
+
+void State_Estimation::handle_rolling_msg( const std_msgs::Bool& msg) {
+	_rolling = *msg;
+	return;
+}
+
 
 void State_Estimation::handle_uwb_msg( const geometry_msgs::PoseArray::ConstPtr& msg ) {
 
@@ -23,18 +37,19 @@ void State_Estimation::handle_uwb_msg( const geometry_msgs::PoseArray::ConstPtr&
 	_uwb_vec[1].y() = msg->poses[2].position.y - msg->poses[0].position.y;
 	_uwb_vec[1].z() = msg->poses[2].position.z - msg->poses[0].position.z;
 
-	cout << "_____________________" << endl;
-	cout << _uwb_vec[0] << endl;
-	cout << _uwb_vec[1] << endl;
+	// cout << "_____________________" << endl;
+	// cout << _uwb_vec[0] << endl;
+	// cout << _uwb_vec[1] << endl;
 
 
 	return;
 }
 
-// void State_Estimation::handle_imu_msg( const sensor_msgs::MagneticField::ConstPtr& msg ) {
-// 	_imu_msg_no_mag = *msg;
-// 	return;
-// }
+void State_Estimation::handle_imu_msg( const sensor_msgs::MagneticField::ConstPtr& msg ) {
+	_orientation = *msg;
+	return;
+}
+
 
 sensor_msgs::MagneticField State_Estimation::mag_field_msg(void) const {
 
@@ -67,4 +82,54 @@ sensor_msgs::MagneticField State_Estimation::mag_field_msg(void) const {
 	msg.header.frame_id = "UWB_boards";
 
 	return msg;
+}
+
+void State_Estimation::step( void ) {
+
+	// distance travelled with each roll
+	double d = 1;
+
+	// prediction step
+	Eigen::Vector2d _mu_pred;
+	Eigen::Matrix2d _sigma_pred;
+
+	if (_rolling == false && (_EKF_roll_step_complete == true)) {
+		cout << "state prediction staying the same" << endl;
+		// if not rolling, predicted state is the same as the current state
+		_mu_pred = _mu;
+
+	} else if(_rolling == true) {
+		cout << "state prediction staying the same" << endl;
+		// if rolling, do not run prediction step
+		_EKF_roll_step_complete = false;
+
+	} else if ((_rolling == false) && (_EKF_roll_step_complete == false)) {
+		cout << "propagating state with roll" << endl;
+		// if just finished rolling, propagate state using the heading of the roll
+
+		_mu_pred[0] = _mu[0] + d*cos(_u); // propagate x
+		_mu_pred[1] = _mu[1] + d*sin(_u); // propagate y
+
+		// propagate covariance
+		Eigen::Matrix3d M = _alpha;
+
+		Eigen::Matrix<double, 2, 3> V {
+		      	{1, 0, -d*sin(_u)},
+		      	{0, 1, d*cos(_u)},
+		};
+
+		// Map noise from x,y,heading in body frame to x,y state space
+		Eigen::Matrix2d R = V*M*V.transpose();
+
+		_sigma_pred = _sigma + R;
+
+		_EKF_roll_step_complete = true;
+
+		cout << _mu_pred << endl;
+		cout << _sigma_pred << endl;
+
+	}
+
+
+	return;
 }
