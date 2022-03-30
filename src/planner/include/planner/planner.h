@@ -8,6 +8,8 @@
 #include "std_msgs/Float64.h"
 #include "geometry_msgs/Pose.h"
 #include "gazebo_msgs/LinkStates.h"
+#include "sensor_msgs/Imu.h"
+#include "geometry_msgs/Point.h"
 
 class Planner {
 	public:
@@ -16,6 +18,8 @@ class Planner {
 		void handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg );
 		void findFaceState(void);
 		void handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg);
+		void handleOrientation(const sensor_msgs::Imu::ConstPtr& msg);
+		void handlePosition(const geometry_msgs::Point::ConstPtr& msg);
 		std_msgs::Int8 faceState_msg(void);
 		ros::Publisher heading_publisher;
 

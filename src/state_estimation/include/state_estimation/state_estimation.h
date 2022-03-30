@@ -4,11 +4,13 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <math.h>
+#include <deque>
 #include "std_msgs/Float64.h"
 #include "std_msgs/Bool.h"
 #include "sensor_msgs/MagneticField.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/PoseArray.h"
+#include "geometry_msgs/Point.h"
 
 
 class State_Estimation {
@@ -22,8 +24,10 @@ class State_Estimation {
 		void handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg );
 		// void handle_direction_msgs( const int msg );
 		void step( void );
+		void find_pos ( void ) ;
 		// nav_msgs::Odometry estimated_odometry( void )const;
-		sensor_msgs::MagneticField mag_field_msg(void) const;
+		sensor_msgs::MagneticField mag_field_msg( void ) const;
+		geometry_msgs::Point pos_msg( void ) const;
 
 	protected:
 		double _u;
@@ -32,10 +36,12 @@ class State_Estimation {
 		Eigen::Matrix2d _sigma;
 		Eigen::Vector3d _alpha;
 		Eigen::Matrix2d _q;
-		Eigen::Vector3d _uwb_vec[2];
+		//Eigen::Vector3d _uwb_vec[2];
 		bool _rolling;
 		bool _EKF_roll_step_complete;
 		sensor_msgs::Imu _orientation;
+		std::deque <Eigen::Vector3d> _uwb_pos[3];
+		Eigen::Vector3d _pos_estimate;
 
 };
 

@@ -79,11 +79,24 @@ Planner::~Planner() {
 
 }
 
+void Planner::handleOrientation(const sensor_msgs::Imu::ConstPtr& msg) {
+	_pose.orientation = msg->orientation;
+	cout << "____________________" << endl;
+	cout << _pose << endl << endl;	
+	findFaceState();
+	return;
+}
+
+void Planner::handlePosition(const geometry_msgs::Point::ConstPtr& msg){
+	_pose.position = *msg;
+	return;
+}
+
 void Planner::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg ) {
 	// update pose class variable
 	_pose = msg->pose[1];
-	//cout << "____________________" << endl;
-	//cout << _pose << endl << endl;	
+	cout << "____________________" << endl;
+	cout << _pose << endl << endl;	
 	findFaceState();
 
 	return;
