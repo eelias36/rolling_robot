@@ -96,7 +96,7 @@ void Actuators::evaluate_command(void) {
 
 		msg.data = _cmd_dir;
 
-		cmd_dir_publisher.publish( msg );
+		//cmd_dir_publisher.publish( msg );
 	}
 
 	if (!_rolling) {

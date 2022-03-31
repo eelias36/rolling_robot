@@ -13,7 +13,7 @@ main( int argc, char* argv[] ){
 	ros::NodeHandle node_handle;
 
 	ros::Publisher joint_command_publishers[16];
-	actuators.cmd_dir_publisher = node_handle.advertise< std_msgs::Int8 >( "/cmd_dir", 1, true );
+	//actuators.cmd_dir_publisher = node_handle.advertise< std_msgs::Int8 >( "/cmd_dir", 1, true );
 	ros::Publisher rolling_publisher = node_handle.advertise< std_msgs::Bool >( "/rolling_state", 1, true );
 	ros::Subscriber command_subscriber = node_handle.subscribe( "rolling_robot/cmd_vel", 1, &Actuators::handle_command, &actuators );
 	ros::Subscriber faceState_subscriber = node_handle.subscribe( "rolling_robot/face_state", 1, &Actuators::handle_faceState, &actuators );

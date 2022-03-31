@@ -3,6 +3,7 @@
 
 #include "ros/ros.h"
 #include <Eigen/Dense>
+#include <cmath>
 #include <map>
 #include "std_msgs/Int8.h"
 #include "std_msgs/Float64.h"
@@ -10,6 +11,7 @@
 #include "gazebo_msgs/LinkStates.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/Point.h"
+#include "geometry_msgs/Twist.h"
 
 class Planner {
 	public:
@@ -20,8 +22,11 @@ class Planner {
 		void handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg);
 		void handleOrientation(const sensor_msgs::Imu::ConstPtr& msg);
 		void handlePosition(const geometry_msgs::Point::ConstPtr& msg);
+		void handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg );
+		void handle_goal_msg( const geometry_msgs::Point::ConstPtr& msg );
 		std_msgs::Int8 faceState_msg(void);
 		ros::Publisher heading_publisher;
+		geometry_msgs::Twist command_msg(void);
 
 	protected:
 		geometry_msgs::Pose _pose;
@@ -32,9 +37,14 @@ class Planner {
 		double _cos_face_angles[14];
 		std::map<int, int> _vector_direction_map[14];
 		std::map<int, int> _inv_vector_direction_map[14];
+		int _pred_face_LUT[16][4];
 		int _cmd_dir;
 		int _face_state;
 		double _heading;
+		bool _rolling_state;
+		ros::Time _time_at_roll_finish;
+		double _roll_wait_secs;
+		Eigen::Vector2d _goal;
 
 		
 

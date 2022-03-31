@@ -8,6 +8,9 @@ using namespace std;
 
 Planner::Planner() {
 	_face_state = -1;
+	_secs_since_roll = 0;
+	_roll_wait_secs = 2;
+
 	_face_norm_vectors_initial[0] << 0, 0, -1;
 	_face_norm_vectors_initial[1] << 0, 1, -1;
 	_face_norm_vectors_initial[2] << 0, 1, 0;
@@ -28,7 +31,7 @@ Planner::Planner() {
 		_face_norm_vectors[i] = _face_norm_vectors_initial[i];
 	}
 
-	// map array entry: face state
+	// map array index: face state
 	// key: face norm vector index
 	// value: commanded direction [forward, back, left, right]
 	_vector_direction_map[0].insert(pair<int,int>(2,0));
@@ -64,7 +67,7 @@ Planner::Planner() {
 	_vector_direction_map[13].insert(pair<int,int>(11,2));
 	_vector_direction_map[13].insert(pair<int,int>(8,3));
 
-	// map array entry: face state
+	// map array index: face state
 	// key: commanded direction [forward, back, left, right]
 	// value: face norm vector index
 	std::map<int, int>::iterator itr;
@@ -73,6 +76,48 @@ Planner::Planner() {
 			_inv_vector_direction_map[i].insert(pair<int,int>( itr->second, itr->first ));
     	}
 	}
+
+	// first index: current face
+	// second index: commanded direction [forward, back, left, right]
+	// entry: predicted face
+	for (int i = 0; i < 14; i++){
+		for (int j = 0; j < 4; j++){
+			_actuator_command_LUT[i][j] = -1;
+		}
+	}
+	_pred_face_LUT[0][0] = 1;
+	_pred_face_LUT[0][1] = 7;
+	_pred_face_LUT[0][2] = 13;
+	_pred_face_LUT[0][3] = 8;
+	_pred_face_LUT[1][0] = 2;
+	_pred_face_LUT[1][1] = 0;
+	_pred_face_LUT[2][0] = 3;
+	_pred_face_LUT[2][1] = 1;
+	_pred_face_LUT[3][0] = 4;
+	_pred_face_LUT[3][1] = 2;
+	_pred_face_LUT[4][0] = 5;
+	_pred_face_LUT[4][1] = 3;
+	_pred_face_LUT[4][2] = 11;
+	_pred_face_LUT[4][3] = 10;
+	_pred_face_LUT[5][0] = 6;
+	_pred_face_LUT[5][1] = 4;
+	_pred_face_LUT[6][0] = 7;
+	_pred_face_LUT[6][1] = 5;
+	_pred_face_LUT[7][0] = 0;
+	_pred_face_LUT[7][1] = 6;
+	_pred_face_LUT[8][2] = 0;
+	_pred_face_LUT[8][3] = 9;
+	_pred_face_LUT[9][2] = 8;
+	_pred_face_LUT[9][3] = 10;
+	_pred_face_LUT[10][2] = 9;
+	_pred_face_LUT[10][3] = 4;
+	_pred_face_LUT[11][2] = 4;
+	_pred_face_LUT[11][3] = 12;
+	_pred_face_LUT[12][2] = 11;
+	_pred_face_LUT[12][3] = 13;
+	_pred_face_LUT[13][2] = 12;
+	_pred_face_LUT[13][3] = 0;
+
 }
 
 Planner::~Planner() {
@@ -100,6 +145,17 @@ void Planner::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg ) 
 	findFaceState();
 
 	return;
+}
+
+void Planner::handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg) {
+	_rolling_state = (*msg).data;
+	return;
+}
+
+void Planner::handle_goal_msg( const geometry_msgs::Point::ConstPtr& msg ) {
+	_goal.x() = (*msg).x;
+	_goal.y() = (*msg).y;
+	return
 }
 
 void Planner::findFaceState (void) {
@@ -189,4 +245,65 @@ void Planner::handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg) {
 
 
 	return;
+}
+
+
+geometry_msgs::Twist Planner::command_msg(void) {
+
+	geometry_msgs::Twist msg;
+
+	if ( _rolling_state == true ) {
+		msg.linear.x = 0;
+		msg.linear.y = 0;
+		msg.linear.z = 0;
+
+		_time_at_roll_finish = ros::Time::now();
+
+	} else if ( (_rolling_state == false) && ((_time_at_roll_finish - ros::Time::now()).toSec() > _roll_wait_secs) {
+		// if not rolling and needs to roll
+
+		// iterate through vector direction map to evaluate each direction of motion given the current face
+		double min_angle = 180;
+		int best_cmd_dir
+		Eigen::Vector2d test_vec;
+		Eigen::Vector2d goal_vec;
+		goal_vec.x() = _goal.x() - _pose.position.x;
+		goal_vec.y() = _goal.y() - _pose.position.y;
+
+		std::map<int, int>::iterator itr;
+		for (itr = _vector_direction_map[_face_state].begin(); itr != _vector_direction_map[_face_state].end(); ++itr) {
+
+
+		        test_vec.x() = _face_norm_vectors[itr->first].x();
+		        test_vec.y() = _face_norm_vectors[itr->first].y();
+
+		        double angle = abs( atan2(test_vec.y(), test_vec.x()) - atan2(goal_vec.y(), goal_vec.x()) );
+		        if ( angle < min_angle) {
+		        	min_angle = angle;
+		        	best_cmd_dir = itr->second;
+		        }
+	     }
+
+	     if (best_cmd_dir == 0) {
+	     	msg.linear.x = 1;
+	     	msg.linear.y = 0;
+	     	msg.linear.z = 0;
+	     } else if (best_cmd_dir == 1) {
+	     	msg.linear.x = -1;
+	     	msg.linear.y = 0;
+	     	msg.linear.z = 0;
+	     } else if (best_cmd_dir == 2) {
+	     	msg.linear.x = 1;
+	     	msg.linear.y = 0;
+	     	msg.linear.z = 0;
+	     } else if (best_cmd_dir == 3) {
+	     	msg.linear.x = -1;
+	     	msg.linear.y = 0;
+	     	msg.linear.z = 0;
+	     }
+
+     }
+
+	return msg;
+
 }
