@@ -288,23 +288,29 @@ geometry_msgs::Twist Planner::command_msg(void) {
 		double vec_angle;
 		double angle;
 
+		cout << "Evaluating " << _vector_direction_map[_face_state].size() << " directions..." << endl << endl;
+
 		for (itr = _vector_direction_map[_face_state].begin(); itr != _vector_direction_map[_face_state].end(); ++itr) {
 
 
 		        test_vec.x() = _face_norm_vectors[itr->first].x();
 		        test_vec.y() = _face_norm_vectors[itr->first].y();
 
+		        // find angle of vector from x-axis
 		        vec_angle = atan2(test_vec.y(), test_vec.x());
 
-
-		        angle = abs(vec_angle - goal_angle);
-				//if (angle < 0) { angle += 2 * M_PI; }
+		        // find angle between vector and goal
+		        angle = vec_angle - goal_angle;
+				if (angle > M_PI)        { angle -= 2 * M_PI; }
+				else if (angle <= -M_PI) { angle += 2 * M_PI; }
+				angle = abs(angle);
+		        
 		        if ( angle < min_angle) {
 		        	min_angle = angle;
 		        	best_cmd_dir = itr->second;
 		        }
 
-		        cout << "Vector angle is " << vec_angle << endl;
+		        //cout << "Vector angle is " << vec_angle << endl;
 		        cout << "Face norm vec " << itr->first << " is at an angle of " << angle << " for direction " << itr->second << endl;
 	     }
 
