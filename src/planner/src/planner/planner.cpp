@@ -8,8 +8,10 @@ using namespace std;
 
 Planner::Planner() {
 	_face_state = -1;
-	_secs_since_roll = 0;
 	_roll_wait_secs = 2;
+	_roll_to_goal = false;
+	ros::Time t(0);
+	_time_at_roll_finish = t;
 
 	_face_norm_vectors_initial[0] << 0, 0, -1;
 	_face_norm_vectors_initial[1] << 0, 1, -1;
@@ -82,7 +84,7 @@ Planner::Planner() {
 	// entry: predicted face
 	for (int i = 0; i < 14; i++){
 		for (int j = 0; j < 4; j++){
-			_actuator_command_LUT[i][j] = -1;
+			_pred_face_LUT[i][j] = -1;
 		}
 	}
 	_pred_face_LUT[0][0] = 1;
@@ -126,8 +128,8 @@ Planner::~Planner() {
 
 void Planner::handleOrientation(const sensor_msgs::Imu::ConstPtr& msg) {
 	_pose.orientation = msg->orientation;
-	cout << "____________________" << endl;
-	cout << _pose << endl << endl;	
+	// cout << "____________________" << endl;
+	// cout << _pose << endl << endl;	
 	findFaceState();
 	return;
 }
@@ -140,23 +142,29 @@ void Planner::handlePosition(const geometry_msgs::Point::ConstPtr& msg){
 void Planner::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg ) {
 	// update pose class variable
 	_pose = msg->pose[1];
-	cout << "____________________" << endl;
-	cout << _pose << endl << endl;	
+	// cout << "____________________" << endl;
+	// cout << _pose << endl << endl;	
 	findFaceState();
 
 	return;
 }
 
 void Planner::handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg) {
-	_rolling_state = (*msg).data;
+	_rolling_state = msg->data;
 	return;
 }
 
 void Planner::handle_goal_msg( const geometry_msgs::Point::ConstPtr& msg ) {
-	_goal.x() = (*msg).x;
-	_goal.y() = (*msg).y;
-	return
+	_goal.x() = msg->x;
+	_goal.y() = msg->y;
+	return;
 }
+
+void Planner::handle_roll_to_goal_msg( const std_msgs::Bool::ConstPtr& msg ) {
+	_roll_to_goal = msg->data;
+	return;
+}
+
 
 void Planner::findFaceState (void) {
 	// convert geometry_msgs/quaternion to eigen quaternion
@@ -218,12 +226,12 @@ void Planner::handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg) {
 		heading_vec.y() = heading_vec_init.y();
 		heading_vec.normalize();
 
-		cout << "__________" << endl;
-		cout << "Face: " << _face_state << endl;
-		cout << "Cmd Dir: " << _cmd_dir << endl;
-		cout << "Index: " << _inv_vector_direction_map[_face_state][_cmd_dir] << endl;
-		cout << "At Index: " << _face_norm_vectors[_inv_vector_direction_map[_face_state][_cmd_dir]] << endl;
-		cout << "Heading vector: " << heading_vec << endl;
+		// cout << "__________" << endl;
+		// cout << "Face: " << _face_state << endl;
+		// cout << "Cmd Dir: " << _cmd_dir << endl;
+		// cout << "Index: " << _inv_vector_direction_map[_face_state][_cmd_dir] << endl;
+		// cout << "At Index: " << _face_norm_vectors[_inv_vector_direction_map[_face_state][_cmd_dir]] << endl;
+		// cout << "Heading vector: " << heading_vec << endl;
 		
 		// find angle between heading vector and x-axis
 		double angle = acos(heading_vec.dot(v)); 
@@ -259,30 +267,48 @@ geometry_msgs::Twist Planner::command_msg(void) {
 
 		_time_at_roll_finish = ros::Time::now();
 
-	} else if ( (_rolling_state == false) && ((_time_at_roll_finish - ros::Time::now()).toSec() > _roll_wait_secs) {
+	} else if ( (_rolling_state == false) && (((ros::Time::now()) - _time_at_roll_finish).toSec() > _roll_wait_secs) && (_roll_to_goal == true) )  {
 		// if not rolling and needs to roll
 
 		// iterate through vector direction map to evaluate each direction of motion given the current face
-		double min_angle = 180;
-		int best_cmd_dir
+		double min_angle = M_PI;
+		int best_cmd_dir;
 		Eigen::Vector2d test_vec;
 		Eigen::Vector2d goal_vec;
 		goal_vec.x() = _goal.x() - _pose.position.x;
 		goal_vec.y() = _goal.y() - _pose.position.y;
+		double goal_angle = atan2(goal_vec.y(), goal_vec.x());
 
 		std::map<int, int>::iterator itr;
+		cout << "-----------" << endl;
+		cout << _pose << endl;
+        cout << "Goal is " << _goal << endl;
+        cout << "Goal angle is " << goal_angle << endl;
+
+		double vec_angle;
+		double angle;
+
 		for (itr = _vector_direction_map[_face_state].begin(); itr != _vector_direction_map[_face_state].end(); ++itr) {
 
 
 		        test_vec.x() = _face_norm_vectors[itr->first].x();
 		        test_vec.y() = _face_norm_vectors[itr->first].y();
 
-		        double angle = abs( atan2(test_vec.y(), test_vec.x()) - atan2(goal_vec.y(), goal_vec.x()) );
+		        vec_angle = atan2(test_vec.y(), test_vec.x());
+
+
+		        angle = abs(vec_angle - goal_angle);
+				//if (angle < 0) { angle += 2 * M_PI; }
 		        if ( angle < min_angle) {
 		        	min_angle = angle;
 		        	best_cmd_dir = itr->second;
 		        }
+
+		        cout << "Vector angle is " << vec_angle << endl;
+		        cout << "Face norm vec " << itr->first << " is at an angle of " << angle << " for direction " << itr->second << endl;
 	     }
+
+	     cout << "Commanded direction: " << best_cmd_dir << endl;
 
 	     if (best_cmd_dir == 0) {
 	     	msg.linear.x = 1;
@@ -293,12 +319,12 @@ geometry_msgs::Twist Planner::command_msg(void) {
 	     	msg.linear.y = 0;
 	     	msg.linear.z = 0;
 	     } else if (best_cmd_dir == 2) {
-	     	msg.linear.x = 1;
-	     	msg.linear.y = 0;
+	     	msg.linear.x = 0;
+	     	msg.linear.y = 1;
 	     	msg.linear.z = 0;
 	     } else if (best_cmd_dir == 3) {
-	     	msg.linear.x = -1;
-	     	msg.linear.y = 0;
+	     	msg.linear.x = 0;
+	     	msg.linear.y = -1;
 	     	msg.linear.z = 0;
 	     }
 

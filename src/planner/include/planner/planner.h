@@ -7,6 +7,7 @@
 #include <map>
 #include "std_msgs/Int8.h"
 #include "std_msgs/Float64.h"
+#include "std_msgs/Bool.h"
 #include "geometry_msgs/Pose.h"
 #include "gazebo_msgs/LinkStates.h"
 #include "sensor_msgs/Imu.h"
@@ -24,6 +25,7 @@ class Planner {
 		void handlePosition(const geometry_msgs::Point::ConstPtr& msg);
 		void handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg );
 		void handle_goal_msg( const geometry_msgs::Point::ConstPtr& msg );
+		void handle_roll_to_goal_msg( const std_msgs::Bool::ConstPtr& msg );
 		std_msgs::Int8 faceState_msg(void);
 		ros::Publisher heading_publisher;
 		geometry_msgs::Twist command_msg(void);
@@ -42,6 +44,7 @@ class Planner {
 		int _face_state;
 		double _heading;
 		bool _rolling_state;
+		bool _roll_to_goal;
 		ros::Time _time_at_roll_finish;
 		double _roll_wait_secs;
 		Eigen::Vector2d _goal;
