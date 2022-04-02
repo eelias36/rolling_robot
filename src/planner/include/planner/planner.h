@@ -48,6 +48,7 @@ class Planner {
 		ros::Time _time_at_roll_finish;
 		double _roll_wait_secs;
 		Eigen::Vector2d _goal;
+		int _prev_face;
 
 		
 
