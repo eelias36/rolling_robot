@@ -16,7 +16,6 @@ main( int argc, char* argv[] ){
 	//actuators.cmd_dir_publisher = node_handle.advertise< std_msgs::Int8 >( "/cmd_dir", 1, true );
 	ros::Publisher rolling_publisher = node_handle.advertise< std_msgs::Bool >( "/rolling_state", 1, true );
 
-
 	ros::Subscriber command_subscriber = node_handle.subscribe( "/cmd_vel", 1, &Actuators::handle_command, &actuators );
 	ros::Subscriber faceState_subscriber = node_handle.subscribe( "rolling_robot/face_state", 1, &Actuators::handle_faceState, &actuators );
 
@@ -42,8 +41,6 @@ main( int argc, char* argv[] ){
 		}
 		//cmd_dir_publisher.publish( actuators.cmd_dir_msg() );
 		rolling_publisher.publish( actuators.rolling_msg() );
-		relay_states_publisher.publish( actuators.relay_msg() );
-		driver_speed_publisher.publish( actuators.driver_speed_msg() );
 		ros::spinOnce();
 		timer.sleep();
 	}

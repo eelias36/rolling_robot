@@ -8,9 +8,16 @@ using namespace std;
 State_Estimation::State_Estimation(const Eigen::Vector3d& alpha) :  _u(),
 																	_mu( Eigen::Vector2d::Zero( 2 ) ),
 																	_sigma( Eigen::Matrix2d::Zero( 2, 2 ) ),
-																	_alpha( alpha ){
+																	_alpha( alpha ) {
 
 	_pos_estimate << 0, 0, 0.5;
+
+	for (int i=0; i<P_COUNT; i++) {
+		_particles[i].x() = i / 10 - 4.5;
+		_particles[i].y() = i % 10 - 4.5;
+		_particles[i].z() = 0.3;
+
+	}
 
 }
 
@@ -80,6 +87,26 @@ void State_Estimation::handle_imu_msg( const sensor_msgs::Imu::ConstPtr& msg ) {
 	return;
 }
 
+sensor_msgs::PointCloud State_Estimation::particle_msg( void ) const {
+	sensor_msgs::PointCloud msg;
+
+	msg.header.stamp = ros::Time::now();
+	msg.header.frame_id = "base_link";
+
+	for (int i=0; i<P_COUNT; i++) {
+		msg.points.push_back( geometry_msgs::Point32() );
+		msg.points.back().x = _particles[i].x();
+		msg.points.back().y = _particles[i].y();
+		msg.points.back().z = _particles[i].z();
+	}
+
+	return msg;
+}
+
+void State_Estimation::callback(const ros::TimerEvent& event) {
+	particle_step();
+	return;
+}
 
 sensor_msgs::MagneticField State_Estimation::mag_field_msg(void) const {
 
@@ -154,6 +181,122 @@ geometry_msgs::Point State_Estimation::pos_msg( void ) const {
 	msg.z = _pos_estimate.z();
 
 	return msg;
+}
+
+void State_Estimation::particle_step( void ) {
+
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+ 
+    // values near the mean are the most likely
+    // standard deviation affects the dispersion of generated values from the mean
+    std::normal_distribution<> d{0,1};
+
+    double weights[P_COUNT];
+
+    // add noise
+	for (int i=0; i<P_COUNT; i++) {
+		_particles[i].x() += d(gen)/10;
+		_particles[i].y() += d(gen)/10;
+		_particles[i].z() += d(gen)/50;
+
+	}
+
+	// IMPLEMENT MOTION MODEL
+	Eigen::Vector3d _particles_bar[P_COUNT];
+
+	for (int i=0; i<P_COUNT; i++) {
+		_particles_bar[i] = _particles[i];
+
+	}
+
+    // find weights
+
+	// find expected UWB positions CHANGE TO USE POSE FROM PARTICLE AVERAGES
+	Eigen::Vector3d uwb1_init(-0.21, -0.21, 0);
+	Eigen::Vector3d uwb2_init(0.21, -0.21, 0);
+	Eigen::Vector3d uwb3_init(-0.21, 0.21, 0);
+
+	Eigen::Quaterniond q;
+	q.w() = _orientation.orientation.w;
+	q.x() = _orientation.orientation.x;
+	q.y() = _orientation.orientation.y;
+	q.z() = _orientation.orientation.z;
+
+	uwb1_init = q * uwb1_init;
+	uwb2_init = q * uwb2_init;
+	uwb3_init = q * uwb3_init;
+
+	Eigen::Vector3d uwb1_hat = uwb1_init;
+	uwb1_hat.x() += _mu.x();
+	uwb1_hat.y() += _mu.y();
+	Eigen::Vector3d uwb2_hat = uwb2_init;
+	uwb2_hat.x() += _mu.x();
+	uwb2_hat.y() += _mu.y();	
+	Eigen::Vector3d uwb3_hat = uwb3_init;
+	uwb3_hat.x() += _mu.x();
+	uwb3_hat.y() += _mu.y();
+
+	double prob_x1;
+	double prob_y1;
+	double prob_z1;
+	double prob_x2;
+	double prob_y2;
+	double prob_z2;
+	double prob_x3;
+	double prob_y3;
+	double prob_z3;
+	double var_x = 0.5;
+	double var_y = 0.5;
+	double var_z = 0.1;
+	Eigen::Vector3d uwb1_test;
+	Eigen::Vector3d uwb2_test;
+	Eigen::Vector3d uwb3_test;
+
+	for (int i=0; i<P_COUNT; i++) {
+
+		// find predicted uwb position for each particle
+		uwb1_test = uwb1_init + _particles_bar[i];
+		uwb2_test = uwb2_init + _particles_bar[i];
+		uwb3_test = uwb3_init + _particles_bar[i];
+
+		// find probability of each predicted vs measured position
+		prob_x1 = exp(-0.5 * (uwb1_test.x() - uwb1_hat.x())*(uwb1_test.x() - uwb1_hat.x()) / var_x);
+		prob_y1 = exp(-0.5 * (uwb1_test.y() - uwb1_hat.y())*(uwb1_test.y() - uwb1_hat.y()) / var_x);
+		prob_z1 = exp(-0.5 * (uwb1_test.z() - uwb1_hat.z())*(uwb1_test.z() - uwb1_hat.z()) / var_x);
+		prob_x2 = exp(-0.5 * (uwb2_test.x() - uwb2_hat.x())*(uwb1_test.x() - uwb2_hat.x()) / var_x);
+		prob_y2 = exp(-0.5 * (uwb2_test.y() - uwb2_hat.y())*(uwb1_test.y() - uwb2_hat.y()) / var_x);
+		prob_z2 = exp(-0.5 * (uwb2_test.z() - uwb2_hat.z())*(uwb1_test.z() - uwb2_hat.z()) / var_x);
+		prob_x3 = exp(-0.5 * (uwb3_test.x() - uwb3_hat.x())*(uwb1_test.x() - uwb3_hat.x()) / var_x);
+		prob_y3 = exp(-0.5 * (uwb3_test.y() - uwb3_hat.y())*(uwb1_test.y() - uwb3_hat.y()) / var_x);
+		prob_z3 = exp(-0.5 * (uwb3_test.z() - uwb3_hat.z())*(uwb1_test.z() - uwb3_hat.z()) / var_x);
+
+		weights[i] = prob_x1 * prob_y1 * prob_z1 * prob_x2 * prob_y2 * prob_z2 * prob_x3 * prob_y3 * prob_z3;
+
+	}
+
+	// normalize weights to 1
+	double total;
+	for (int i=0; i<P_COUNT; i++) {
+		total += weights[i];
+	}
+	for (int i=0; i<P_COUNT; i++) {
+		weights[i] = weights[i] / total;
+	}
+
+
+	// create cumulative weights
+	double cum_weights[P_COUNT];
+	double running_cum;
+
+	for (int i=0; i<P_COUNT; i++) {
+		running_cum += weights[i];
+		cum_weights[i] = running_cum;
+	}
+
+	
+
+	return;
 }
 
 void State_Estimation::step( void ) {
