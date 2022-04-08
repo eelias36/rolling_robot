@@ -185,30 +185,31 @@ geometry_msgs::Point State_Estimation::pos_msg( void ) const {
 
 void State_Estimation::particle_step( void ) {
 
-    std::random_device rd{};
+	std::random_device rd{};
     std::mt19937 gen{rd()};
- 
-    // values near the mean are the most likely
+
+       // values near the mean are the most likely
     // standard deviation affects the dispersion of generated values from the mean
     std::normal_distribution<> d{0,1};
 
-    double weights[P_COUNT];
 
     // add noise
 	for (int i=0; i<P_COUNT; i++) {
 		_particles[i].x() += d(gen)/10;
 		_particles[i].y() += d(gen)/10;
 		_particles[i].z() += d(gen)/50;
+		//cout << d(gen) << endl;
 
 	}
 
 	// IMPLEMENT MOTION MODEL
-	Eigen::Vector3d _particles_bar[P_COUNT];
+	Eigen::Vector3d particles_bar[P_COUNT];
 
 	for (int i=0; i<P_COUNT; i++) {
-		_particles_bar[i] = _particles[i];
+		particles_bar[i] = _particles[i];
 
 	}
+
 
     // find weights
 
@@ -227,15 +228,9 @@ void State_Estimation::particle_step( void ) {
 	uwb2_init = q * uwb2_init;
 	uwb3_init = q * uwb3_init;
 
-	Eigen::Vector3d uwb1_hat = uwb1_init;
-	uwb1_hat.x() += _mu.x();
-	uwb1_hat.y() += _mu.y();
-	Eigen::Vector3d uwb2_hat = uwb2_init;
-	uwb2_hat.x() += _mu.x();
-	uwb2_hat.y() += _mu.y();	
-	Eigen::Vector3d uwb3_hat = uwb3_init;
-	uwb3_hat.x() += _mu.x();
-	uwb3_hat.y() += _mu.y();
+	Eigen::Vector3d uwb1_hat = uwb1_init + _pos_estimate;
+	Eigen::Vector3d uwb2_hat = uwb2_init + _pos_estimate;	
+	Eigen::Vector3d uwb3_hat = uwb3_init + _pos_estimate;
 
 	double prob_x1;
 	double prob_y1;
@@ -246,19 +241,24 @@ void State_Estimation::particle_step( void ) {
 	double prob_x3;
 	double prob_y3;
 	double prob_z3;
-	double var_x = 0.5;
-	double var_y = 0.5;
+	double var_x = 1;
+	double var_y = 1;
 	double var_z = 0.1;
 	Eigen::Vector3d uwb1_test;
 	Eigen::Vector3d uwb2_test;
 	Eigen::Vector3d uwb3_test;
 
+	double weights[P_COUNT];
+
+
 	for (int i=0; i<P_COUNT; i++) {
 
 		// find predicted uwb position for each particle
-		uwb1_test = uwb1_init + _particles_bar[i];
-		uwb2_test = uwb2_init + _particles_bar[i];
-		uwb3_test = uwb3_init + _particles_bar[i];
+		uwb1_test = uwb1_init + particles_bar[i];
+		uwb2_test = uwb2_init + particles_bar[i];
+		uwb3_test = uwb3_init + particles_bar[i];
+
+		//cout << "test: " << uwb1_test.y() << endl << "pred: " << uwb1_hat.y() << endl;
 
 		// find probability of each predicted vs measured position
 		prob_x1 = exp(-0.5 * (uwb1_test.x() - uwb1_hat.x())*(uwb1_test.x() - uwb1_hat.x()) / var_x);
@@ -274,27 +274,58 @@ void State_Estimation::particle_step( void ) {
 		weights[i] = prob_x1 * prob_y1 * prob_z1 * prob_x2 * prob_y2 * prob_z2 * prob_x3 * prob_y3 * prob_z3;
 
 	}
-
+/**
 	// normalize weights to 1
 	double total;
 	for (int i=0; i<P_COUNT; i++) {
 		total += weights[i];
 	}
+	cout <<endl<< "Weights: " << endl;
 	for (int i=0; i<P_COUNT; i++) {
 		weights[i] = weights[i] / total;
+		//cout << weights[i]<<endl;
 	}
-
+	**/
 
 	// create cumulative weights
 	double cum_weights[P_COUNT];
-	double running_cum;
-
+	double running_cum = 0;
+	//cout <<endl<< "Cum. Weights: " << endl;
 	for (int i=0; i<P_COUNT; i++) {
 		running_cum += weights[i];
 		cum_weights[i] = running_cum;
+		//cout << cum_weights[i]<<endl;
 	}
 
-	
+	//normalize
+	for (int i=0; i<P_COUNT; i++) {
+		cum_weights[i] = cum_weights[i] / cum_weights[P_COUNT-1];
+		//cout << cum_weights[i]<<endl;
+	}
+
+	//cout << cum_weights[99] << endl;
+
+	std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+	double random_num;
+	int j;
+
+	// draw new particles
+	for (int i=0; i<P_COUNT; i++) {
+		random_num = dist(gen);
+		//cout << random_num << endl;
+		for (j=0; j<P_COUNT; j++) {
+			if(cum_weights[j] > random_num) {break;}
+		}
+
+		// add drawn particles to list
+		_particles[i] = particles_bar[j];
+		//cout << particles_bar[j] <<endl<<endl;
+	}
+
+
+ 
+ 
 
 	return;
 }
