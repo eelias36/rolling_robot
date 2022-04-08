@@ -27,13 +27,13 @@ void Uwb_interface::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& 
 	_uwb_pos[2].y() = msg->pose[21].position.y;
 	_uwb_pos[2].z() = msg->pose[21].position.z;
 
-	cout << "____________________" << endl;
-	cout << msg->name[19] << endl;
-	cout<< _uwb_pos[0] << endl << endl;
-	cout << msg->name[20] << endl;
-	cout<< _uwb_pos[1] << endl << endl;
-	cout << msg->name[21] << endl;
-	cout<< _uwb_pos[2] << endl << endl;
+	// cout << "____________________" << endl;
+	// cout << msg->name[19] << endl;
+	// cout<< _uwb_pos[0] << endl << endl;
+	// cout << msg->name[20] << endl;
+	// cout<< _uwb_pos[1] << endl << endl;
+	// cout << msg->name[21] << endl;
+	// cout<< _uwb_pos[2] << endl << endl;
 
 	return;
 }

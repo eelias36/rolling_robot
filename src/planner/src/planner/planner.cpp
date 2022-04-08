@@ -266,15 +266,19 @@ geometry_msgs::Twist Planner::command_msg(void) {
 	goal_vec.y() = _goal.y() - _pose.position.y;
 
 
-	// stop if within deadband of goal
-	if (goal_vec.norm() < 0.4) {
+	if (_roll_to_goal == false) {
+		ROS_INFO_STREAM_THROTTLE(5, "Publish a goal to /goal and set /roll_to_goal to true in order to have TERRA move to the goal");
+	} else if (goal_vec.norm() < 0.4) {
+		// stop if within deadband of goal
 		msg.linear.x = 0;
 		msg.linear.y = 0;
 		msg.linear.z = 0;
 
-		cout << "-----------" << endl;
-		cout << "You have reached your goal!" << endl;
-		cout << "You are at " << endl << _pose.position << " and the goal is at " << endl << _goal << endl;
+		ROS_INFO_STREAM_THROTTLE(5, "You have reached your goal!" << endl << "You are at " << endl << _pose.position
+			<< " and the goal is at " << endl << _goal);
+		// cout << "-----------" << endl;
+		// cout << "You have reached your goal!" << endl;
+		// cout << "You are at " << endl << _pose.position << " and the goal is at " << endl << _goal << endl;
 
 	} else if ( _rolling_state == true ) {
 		msg.linear.x = 0;
@@ -287,6 +291,9 @@ geometry_msgs::Twist Planner::command_msg(void) {
 		(_roll_to_goal == true) && (_prev_face != _face_state))  {
 		// if not rolling and needs to roll
 
+		ROS_INFO_STREAM_THROTTLE(5, "Rolling towards goal of " << endl << _goal << endl << "You are at " << endl << _pose.position);
+
+
 		// iterate through vector direction map to evaluate each direction of motion given the current face
 		double min_angle = M_PI;
 		int best_cmd_dir;
@@ -295,22 +302,23 @@ geometry_msgs::Twist Planner::command_msg(void) {
 		double goal_angle = atan2(goal_vec.y(), goal_vec.x());
 
 		std::map<int, int>::iterator itr;
-		cout << "-----------" << endl;
-		cout << _pose << endl;
-        cout << "Goal is " << _goal << endl;
-        cout << "Goal angle is " << goal_angle << endl;
+		// cout << "-----------" << endl;
+		// cout << _pose << endl;
+  //       cout << "Goal is " << _goal << endl;
+  //       cout << "Goal angle is " << goal_angle << endl;
 
 		double vec_angle;
 		double angle;
 
-		cout << "Previous face is face " << _face_state << endl;
-		cout << "Evaluating " << _vector_direction_map[_face_state].size() << " directions..." << endl << endl;
+		// cout << "Previous face is face " << _prev_face << endl;
+		// cout << "Current face is face " << _face_state << endl;
+		// cout << "Evaluating " << _vector_direction_map[_face_state].size() << " directions..." << endl << endl;
 
 		for (itr = _vector_direction_map[_face_state].begin(); itr != _vector_direction_map[_face_state].end(); ++itr) {
 
 				// avoid backtracking
 				if( _pred_face_LUT[_face_state][itr->second] == _prev_face) {
-					cout << "Avoiding face norm vec " << itr->first << " and direction " << itr->second << " for backtracking" << endl;
+					// cout << "Avoiding face norm vec " << itr->first << " and direction " << itr->second << " for backtracking" << endl;
 					continue;
 				}
 
@@ -332,11 +340,11 @@ geometry_msgs::Twist Planner::command_msg(void) {
 		        }
 
 		        //cout << "Vector angle is " << vec_angle << endl;
-		        cout << "Face norm vec " << itr->first << " is at an angle of " << angle << " for direction " << itr->second << endl;
+		        // cout << "Face norm vec " << itr->first << " is at an angle of " << angle << " for direction " << itr->second << endl;
 		        
 	     }
 
-	     cout << "Commanded direction: " << best_cmd_dir << endl;
+	     // cout << endl << "Commanded direction: " << best_cmd_dir << endl;
 
 	     if (best_cmd_dir == 0) {
 	     	msg.linear.x = 1;

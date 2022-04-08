@@ -12,6 +12,13 @@ Actuators::Actuators() {
 	_rolling = false;
 	_commanded_actuator = -1;
 	_cmd_dir = -1;
+	_retracting = false;
+	_homing_complete = false;
+
+	for (int i=0; i<16; i++) {
+		_relay_state[i] = 0;
+	}
+	_driver_speed = 0;
 
 	// first index: current face
 	// second index: commanded direction [forward, back, left, right]
@@ -73,6 +80,108 @@ void Actuators::handle_faceState(const std_msgs::Int8::ConstPtr& msg) {
 	return;
 }
 
+std_msgs::ByteMultiArray Actuators::relay_msg(void) {
+	std_msgs::ByteMultiArray msg;
+
+	for (int i=0; i<16; i++) {
+		msg.data.push_back( _relay_state[i] );
+	}
+
+	return msg;
+}
+
+std_msgs::Float32 Actuators::driver_speed_msg(void) {
+	std_msgs::Float32 msg;
+
+	msg.data = _driver_speed;
+
+	return msg;
+}
+
+void Actuators::home(const float& speed){
+
+	if (!_retracting && !_homing_complete) {
+
+		bool _test_retracting = true;
+
+		// extend actuators until reach end of travel
+		for (int i=0; i<16; i++) {
+			if( _out_switch_state[i] == true ) {
+				// not at end of travel
+				_relay_state[i] = 1;
+				_test_retracting = false;
+			} else {
+				// reaches end of travel
+				_relay_state[i] = 0;
+			}
+		}
+
+		if (_test_retracting) {
+			_retracting = true;
+		}
+
+		_driver_speed = speed;
+	}
+
+	if(_retracting && !_homing_complete) {
+		
+		_driver_speed = -speed;
+
+		bool _test_complete = true;
+
+		// retract actuators until reach end of travel
+		for (int i=0; i<16; i++) {
+			if( _in_switch_state[i] == false ) {
+				// not at end of travel
+				_relay_state[i] = 1;
+				_test_complete = false;
+			} else {
+				// reaches end of travel
+				_relay_state[i] = 0;
+			}
+		}
+
+		if (_test_complete) {
+			_homing_complete = true;
+		}
+	}
+	return;
+}
+
+void Actuators::update(void){
+
+
+	if (_commanded_actuator != -1) {
+
+		for (int i=0; i<16; i++) {
+			_relay_state[i] = 0;
+		}
+		
+		_relay_state[_commanded_actuator] = 1;
+
+		if ( !_retracting && _out_switch_state[_commanded_actuator] == true ) {
+			_driver_speed = 20;
+		} else if ( !_retracting &&  _out_switch_state[_commanded_actuator] == false ) {
+			_retracting = true;
+			_driver_speed = -20;
+		} else if ( _retracting && _in_switch_state[_commanded_actuator] == false ) {
+			_driver_speed = -20;
+		} else if ( _retracting && _in_switch_state[_commanded_actuator] == true ) {
+			_driver_speed = 0;
+			_rolling = false;
+			_commanded_actuator = -1;
+		}
+
+	} else {
+		for (int i=0; i<16; i++) {
+			_relay_state[i] = 0;
+		}
+		_driver_speed = 0;
+	}
+
+	return;
+}
+
 void Actuators::evaluate_command(void) {
 	if (_commanded_vel.x > 0) {
 		_cmd_dir = 0;
@@ -105,17 +214,17 @@ void Actuators::evaluate_command(void) {
 	return;
 }
 
-void Actuators::actuator_position_update(void) {
+void Actuators::actuator_position_update_sim(void) {
 
 	// command all other actuators to 0
 	for(int i = 0; i < 16; i++) {
 		_commanded_pos[i] = 0;
 	}
 
-	cout << "____________________________" << endl;
-	cout << "Face State: " << _faceState << endl;
-	cout << "Rolling: " << _rolling << endl;
-	cout << "Commanded Actuator: " << _commanded_actuator << endl;
+	// cout << "____________________________" << endl;
+	// cout << "Face State: " << _faceState << endl;
+	// cout << "Rolling: " << _rolling << endl;
+	// cout << "Commanded Actuator: " << _commanded_actuator << endl;
 	
 	if (_rolling == true) {
 		if ( (_counter > 60) | (_counter < 0) ) {
@@ -132,21 +241,21 @@ void Actuators::actuator_position_update(void) {
 	}
 }
 
-void Actuators::home(void) {
+void Actuators::home_sim(void) {
 	for( int i=0;i<16;i++ ) {
 		_commanded_pos[i] = 0;
 	}
 	return;
 }
 
-void Actuators::update_command_msgs(void) {
+void Actuators::update_command_msgs_sim(void) {
 	for( int i=0;i<16;i++ ) {
 		command_msgs[i].data = (float) _commanded_pos[i];
 	}
 	return;
 }
 
-void Actuators::roll_fwd_update(void) {
+void Actuators::roll_fwd_update_sim(void) {
 	float static stroke = 0.5;
 
 	if ( (_counter > 540) | (_counter < 0) ) {
@@ -187,7 +296,7 @@ void Actuators::roll_fwd_update(void) {
 	return;
 }
 
-void Actuators::roll_side_update(void) {
+void Actuators::roll_side_update_sim(void) {
 	float static stroke = 0.5;
 
 	if ( (_counter > 540) | (_counter < 0) ) {

@@ -136,8 +136,7 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/actuator_control_node.cpp)
-add_executable(${PROJECT_NAME}_rollfwd src/actuator_control_rollfwd.cpp)
-add_executable(${PROJECT_NAME}_rollside src/actuator_control_rollside.cpp)
+add_executable(${PROJECT_NAME}_node_sim src/actuator_control_node_sim.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,19 +147,14 @@ add_executable(${PROJECT_NAME}_rollside src/actuator_control_rollside.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(${PROJECT_NAME}_rollfwd ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(${PROJECT_NAME}_rollside ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_node_sim ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
   actuator_control
   ${catkin_LIBRARIES}
 )
-target_link_libraries(${PROJECT_NAME}_rollfwd
-  actuator_control
-  ${catkin_LIBRARIES}
-)
-target_link_libraries(${PROJECT_NAME}_rollside
+target_link_libraries(${PROJECT_NAME}_node_sim
   actuator_control
   ${catkin_LIBRARIES}
 )
