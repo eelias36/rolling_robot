@@ -212,12 +212,20 @@ std_msgs::Int8 Planner::faceState_msg(void) {
 	return msg;
 }
 
-void Planner::handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg) {
-	_cmd_dir = msg->data;
-	
-	double heading;
-	if(_cmd_dir != -1) {
-		std_msgs::Float64 msg;
+void Planner::handle_cmd_vel(const geometry_msgs::Twist::ConstPtr& msg) {
+
+	if (_rolling_state == false) {
+		if (msg->linear.x > 0) {
+			_cmd_dir = 0;
+		} else if (msg->linear.x < 0) {
+			_cmd_dir = 1;
+		} else if (msg->linear.y > 0) {
+			_cmd_dir = 2;
+		} else if(msg->linear.y < 0) {
+			_cmd_dir = 3;
+		}
+
+		std_msgs::Float64 heading_msg;
 
 		Eigen::Vector2d v(1, 0);
 		Eigen::Vector3d heading_vec_init = _face_norm_vectors[_inv_vector_direction_map[_face_state][_cmd_dir]];
@@ -247,19 +255,19 @@ void Planner::handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg) {
 		}
 
 
-		msg.data = heading;
+		heading_msg.data = heading;
 
-		heading_publisher.publish(msg);
+		heading_publisher.publish(heading_msg);
+
 	}
-
-
 	return;
 }
 
 
-geometry_msgs::Twist Planner::command_msg(void) {
+void Planner::command_update(void) {
 
 	geometry_msgs::Twist msg;
+	std_msgs::Float64 heading_msg;
 
 	Eigen::Vector2d goal_vec;
 	goal_vec.x() = _goal.x() - _pose.position.x;
@@ -270,9 +278,6 @@ geometry_msgs::Twist Planner::command_msg(void) {
 		ROS_INFO_STREAM_THROTTLE(5, "Publish a goal to /goal and set /roll_to_goal to true in order to have TERRA move to the goal");
 	} else if (goal_vec.norm() < 0.4) {
 		// stop if within deadband of goal
-		msg.linear.x = 0;
-		msg.linear.y = 0;
-		msg.linear.z = 0;
 
 		ROS_INFO_STREAM_THROTTLE(5, "You have reached your goal!" << endl << "You are at " << endl << _pose.position
 			<< " and the goal is at " << endl << _goal);
@@ -281,10 +286,6 @@ geometry_msgs::Twist Planner::command_msg(void) {
 		// cout << "You are at " << endl << _pose.position << " and the goal is at " << endl << _goal << endl;
 
 	} else if ( _rolling_state == true ) {
-		msg.linear.x = 0;
-		msg.linear.y = 0;
-		msg.linear.z = 0;
-
 		_time_at_roll_finish = ros::Time::now();
 
 	} else if ( (_rolling_state == false) && (((ros::Time::now()) - _time_at_roll_finish).toSec() > _roll_wait_secs) &&
@@ -366,9 +367,10 @@ geometry_msgs::Twist Planner::command_msg(void) {
 
 	     _prev_face = _face_state;
 
+	     cmd_publisher.publish( msg );
 
      }
 
-	return msg;
+	return;
 
 }

@@ -20,7 +20,7 @@ class Planner {
 		virtual ~Planner();
 		void handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg );
 		void findFaceState(void);
-		void handle_cmd_dir(const std_msgs::Int8::ConstPtr& msg);
+		void handle_cmd_vel(const geometry_msgs::Twist::ConstPtr& msg);
 		void handleOrientation(const sensor_msgs::Imu::ConstPtr& msg);
 		void handlePosition(const geometry_msgs::Point::ConstPtr& msg);
 		void handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg );
@@ -28,7 +28,8 @@ class Planner {
 		void handle_roll_to_goal_msg( const std_msgs::Bool::ConstPtr& msg );
 		std_msgs::Int8 faceState_msg(void);
 		ros::Publisher heading_publisher;
-		geometry_msgs::Twist command_msg(void);
+		void command_update(void);
+		ros::Publisher cmd_publisher;
 
 	protected:
 		geometry_msgs::Pose _pose;

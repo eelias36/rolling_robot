@@ -3,9 +3,9 @@
   <include file="$(find rolling_robot_control)/launch/rolling_robot_control.launch" />
 
   <node name="actuator_control_node_sim" pkg="actuator_control" type="actuator_control_node_sim" output="screen"/>
-  <node name="planner_node" pkg="planner" type="planner_node" output="screen"/>
   <node name="uwb_interface_node" pkg="uwb_interface" type="uwb_interface_node" output="screen"/>
   <!--
+  <node name="planner_node" pkg="planner" type="planner_node" output="screen"/>
   <node name="state_estimation_node" pkg="state_estimation" type="state_estimation_node" output="screen"/>
 -->
 

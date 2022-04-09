@@ -15,12 +15,12 @@ main( int argc, char* argv[] ){
 	ros::Subscriber position_subscriber = node_handle.subscribe( "/position",1, &Planner::handlePosition, &planner );
 	ros::Subscriber orientation_subscriber = node_handle.subscribe( "/imu/data",1, &Planner::handleOrientation, &planner );
 	ros::Subscriber roll_to_goal_subscriber = node_handle.subscribe( "/roll_to_goal",1, &Planner::handle_roll_to_goal_msg, &planner );
-	//ros::Subscriber cmd_dir_subscriber = node_handle.subscribe( "/cmd_dir",1, &Planner::handle_cmd_dir, &planner );
+	ros::Subscriber cmd_subscriber = node_handle.subscribe( "/cmd_vel",1, &Planner::handle_cmd_vel, &planner );
 	ros::Subscriber rolling_subscriber = node_handle.subscribe( "/rolling_state",1, &Planner::handle_rolling_msg, &planner );
 	ros::Subscriber goal_subscriber = node_handle.subscribe( "/goal",1, &Planner::handle_goal_msg, &planner );
 	ros::Publisher faceState_publisher = node_handle.advertise< std_msgs::Int8 >( "rolling_robot/face_state", 1, true );
 	planner.heading_publisher = node_handle.advertise< std_msgs::Float64 >( "/cmd_heading", 1, true );
-	ros::Publisher cmd_vel_publisher = node_handle.advertise< geometry_msgs::Twist >( "/cmd_vel", 1, true );
+	planner.cmd_publisher = node_handle.advertise< geometry_msgs::Twist >( "/cmd_vel", 1, true );
 
 	double frequency = 10;
 	ros::Rate timer( frequency );
@@ -28,7 +28,7 @@ main( int argc, char* argv[] ){
 
 	while( ros::ok() ){
 		faceState_publisher.publish( planner.faceState_msg() );
-		cmd_vel_publisher.publish( planner.command_msg() );
+		planner.command_update();
 		//heading_publisher.publish( planner.heading_msg() );
 
 		ros::spinOnce();
