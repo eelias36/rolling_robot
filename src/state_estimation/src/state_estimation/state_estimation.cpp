@@ -6,15 +6,16 @@
 using namespace std;
 
 State_Estimation::State_Estimation(const Eigen::Vector3d& alpha) :  _u(),
-																	_mu( Eigen::Vector2d::Zero( 2 ) ),
+																	_particle_pos_estimate( Eigen::Vector3d::Zero( 3 ) ),
 																	_sigma( Eigen::Matrix2d::Zero( 2, 2 ) ),
 																	_alpha( alpha ) {
 
 	_pos_estimate << 0, 0, 0.5;
 
+	// create grid of particles 10x10
 	for (int i=0; i<P_COUNT; i++) {
-		_particles[i].x() = i / 10 - 4.5;
-		_particles[i].y() = i % 10 - 4.5;
+		_particles[i].x() = i / (P_COUNT/10) - 5;
+		_particles[i].y() = i % (P_COUNT/10) - 5;
 		_particles[i].z() = 0.3;
 
 	}
@@ -22,6 +23,27 @@ State_Estimation::State_Estimation(const Eigen::Vector3d& alpha) :  _u(),
 }
 
 State_Estimation::~State_Estimation() {
+
+}
+
+void State_Estimation::find_particle_avg( void ) {
+	
+	double x_avg = 0;
+	double y_avg = 0;
+	double z_avg = 0;
+
+	for (int i=0; i<P_COUNT; i++) {
+		x_avg += _particles[i].x();
+		y_avg += _particles[i].y();
+		z_avg += _particles[i].z();
+	}
+	x_avg = x_avg/P_COUNT;
+	y_avg = y_avg/P_COUNT;
+	z_avg = z_avg/P_COUNT;
+
+	_particle_pos_estimate.x() = x_avg;
+	_particle_pos_estimate.y() = y_avg;
+	_particle_pos_estimate.z() = z_avg;
 
 }
 
@@ -154,6 +176,20 @@ sensor_msgs::MagneticField State_Estimation::mag_field_msg(void) const {
 	return msg;
 }
 
+geometry_msgs::PoseStamped State_Estimation::pose_msg( void ) const {
+	geometry_msgs::PoseStamped msg;
+
+
+	msg.header.stamp = ros::Time::now();
+	msg.header.frame_id = "base_link";
+	msg.pose.orientation = _orientation.orientation;
+	msg.pose.position.x = _particle_pos_estimate.x();
+	msg.pose.position.y = _particle_pos_estimate.y();
+	msg.pose.position.z = _particle_pos_estimate.z();
+
+	return msg;
+}
+
 void State_Estimation::find_pos ( void ) {
 
 	Eigen::Vector3d running_total(0,0,0);
@@ -188,16 +224,16 @@ void State_Estimation::particle_step( void ) {
 	std::random_device rd{};
     std::mt19937 gen{rd()};
 
-       // values near the mean are the most likely
+    // values near the mean are the most likely
     // standard deviation affects the dispersion of generated values from the mean
     std::normal_distribution<> d{0,1};
 
 
     // add noise
 	for (int i=0; i<P_COUNT; i++) {
-		_particles[i].x() += d(gen)/10;
-		_particles[i].y() += d(gen)/10;
-		_particles[i].z() += d(gen)/50;
+		_particles[i].x() += d(gen)/20;
+		_particles[i].y() += d(gen)/20;
+		_particles[i].z() += d(gen)/500;
 		//cout << d(gen) << endl;
 
 	}
@@ -241,9 +277,9 @@ void State_Estimation::particle_step( void ) {
 	double prob_x3;
 	double prob_y3;
 	double prob_z3;
-	double var_x = 1;
-	double var_y = 1;
-	double var_z = 0.1;
+	double var_x = 0.01;
+	double var_y = 0.01;
+	double var_z = 0.01;
 	Eigen::Vector3d uwb1_test;
 	Eigen::Vector3d uwb2_test;
 	Eigen::Vector3d uwb3_test;
@@ -320,11 +356,12 @@ void State_Estimation::particle_step( void ) {
 
 		// add drawn particles to list
 		_particles[i] = particles_bar[j];
+		find_particle_avg();
 		//cout << particles_bar[j] <<endl<<endl;
 	}
 
 
- 
+
  
 
 	return;

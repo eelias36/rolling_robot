@@ -19,8 +19,9 @@ main( int argc, char* argv[] ){
 	ros::Publisher mag_publisher = node_handle.advertise< sensor_msgs::MagneticField >( "/imu/mag", 1, true );
 	ros::Publisher pos_publisher = node_handle.advertise< geometry_msgs::Point >( "/position", 1, true );
 	ros::Publisher particle_publisher = node_handle.advertise< sensor_msgs::PointCloud >( "/particles", 1, true );
+	ros::Publisher pose_publisher = node_handle.advertise< geometry_msgs::PoseStamped >( "/pose", 1, true );	
 
-	ros::Timer filter_timer = node_handle.createTimer(ros::Duration(0.1), &State_Estimation::callback, &state_estimation);
+	ros::Timer filter_timer = node_handle.createTimer(ros::Duration(1), &State_Estimation::callback, &state_estimation);
 
 
 	double frequency = 10;
@@ -30,6 +31,7 @@ main( int argc, char* argv[] ){
 		mag_publisher.publish( state_estimation.mag_field_msg() );
 		pos_publisher.publish( state_estimation.pos_msg() );
 		particle_publisher.publish( state_estimation.particle_msg() );
+		pose_publisher.publish( state_estimation.pose_msg() );
 
 		ros::spinOnce();
 		timer.sleep();

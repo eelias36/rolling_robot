@@ -13,10 +13,11 @@
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/PointCloud.h"
 #include "geometry_msgs/PoseArray.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Point32.h"
 
-#define P_COUNT 100
+#define P_COUNT 1000
 
 
 class State_Estimation {
@@ -37,10 +38,13 @@ class State_Estimation {
 		sensor_msgs::MagneticField mag_field_msg( void ) const;
 		geometry_msgs::Point pos_msg( void ) const;
 		sensor_msgs::PointCloud particle_msg( void ) const;
+		geometry_msgs::PoseStamped pose_msg( void ) const;
+
 
 	protected:
 		double _u;
 		// perception::Observations _z;
+		Eigen::Vector3d _particle_pos_estimate;	
 		Eigen::Vector2d _mu;
 		Eigen::Matrix2d _sigma;
 		Eigen::Vector3d _alpha;
@@ -52,6 +56,7 @@ class State_Estimation {
 		std::deque <Eigen::Vector3d> _uwb_pos[3];
 		Eigen::Vector3d _pos_estimate;
 		Eigen::Vector3d _particles[P_COUNT];
+		void find_particle_avg( void );
 
 };
 
