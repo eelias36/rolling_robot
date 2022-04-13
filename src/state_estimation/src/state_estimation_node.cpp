@@ -21,7 +21,7 @@ main( int argc, char* argv[] ){
 	ros::Publisher particle_publisher = node_handle.advertise< sensor_msgs::PointCloud >( "/particles", 1, true );
 	ros::Publisher pose_publisher = node_handle.advertise< geometry_msgs::PoseStamped >( "/pose", 1, true );	
 
-	ros::Timer filter_timer = node_handle.createTimer(ros::Duration(1), &State_Estimation::callback, &state_estimation);
+	ros::Timer filter_timer = node_handle.createTimer(ros::Duration(0.1), &State_Estimation::callback, &state_estimation);
 
 
 	double frequency = 10;

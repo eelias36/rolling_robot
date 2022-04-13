@@ -9,6 +9,7 @@
 #include "std_msgs/Float64.h"
 #include "std_msgs/Bool.h"
 #include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "gazebo_msgs/LinkStates.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/Point.h"
@@ -22,7 +23,7 @@ class Planner {
 		void findFaceState(void);
 		void handle_cmd_vel(const geometry_msgs::Twist::ConstPtr& msg);
 		void handleOrientation(const sensor_msgs::Imu::ConstPtr& msg);
-		void handlePosition(const geometry_msgs::Point::ConstPtr& msg);
+		void handlePosition(const geometry_msgs::PoseStamped::ConstPtr& msg);
 		void handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg );
 		void handle_goal_msg( const geometry_msgs::Point::ConstPtr& msg );
 		void handle_roll_to_goal_msg( const std_msgs::Bool::ConstPtr& msg );

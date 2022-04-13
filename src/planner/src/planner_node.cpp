@@ -12,7 +12,7 @@ main( int argc, char* argv[] ){
 	ros::NodeHandle node_handle;
 
 	//ros::Subscriber link_states_subscriber = node_handle.subscribe( "/gazebo/link_states",1, &Planner::handleGazeboState, &planner );
-	ros::Subscriber position_subscriber = node_handle.subscribe( "/position",1, &Planner::handlePosition, &planner );
+	ros::Subscriber position_subscriber = node_handle.subscribe( "/pose",1, &Planner::handlePosition, &planner );
 	ros::Subscriber orientation_subscriber = node_handle.subscribe( "/imu/data",1, &Planner::handleOrientation, &planner );
 	ros::Subscriber roll_to_goal_subscriber = node_handle.subscribe( "/roll_to_goal",1, &Planner::handle_roll_to_goal_msg, &planner );
 	ros::Subscriber cmd_subscriber = node_handle.subscribe( "/cmd_vel",1, &Planner::handle_cmd_vel, &planner );

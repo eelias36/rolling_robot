@@ -51,7 +51,7 @@ class State_Estimation {
 		Eigen::Matrix2d _q;
 		//Eigen::Vector3d _uwb_vec[2];
 		bool _rolling;
-		bool _EKF_roll_step_complete;
+		bool _motion_step_complete;
 		sensor_msgs::Imu _orientation;
 		std::deque <Eigen::Vector3d> _uwb_pos[3];
 		Eigen::Vector3d _pos_estimate;

@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 State_Estimation::State_Estimation(const Eigen::Vector3d& alpha) :  _u(),
 																	_particle_pos_estimate( Eigen::Vector3d::Zero( 3 ) ),
 																	_sigma( Eigen::Matrix2d::Zero( 2, 2 ) ),
@@ -221,149 +222,168 @@ geometry_msgs::Point State_Estimation::pos_msg( void ) const {
 
 void State_Estimation::particle_step( void ) {
 
-	std::random_device rd{};
-    std::mt19937 gen{rd()};
 
-    // values near the mean are the most likely
-    // standard deviation affects the dispersion of generated values from the mean
-    std::normal_distribution<> d{0,1};
+	if(_rolling == true) {
+		//cout << "state prediction staying the same" << endl;
+		// if rolling, do not run filter
+		_motion_step_complete = false;
 
+	} else if (_rolling == false) {
+		// cout << "propagating state with roll" << endl;
+		// if just finished rolling, propagate state using the heading of the roll
 
-    // add noise
-	for (int i=0; i<P_COUNT; i++) {
-		_particles[i].x() += d(gen)/20;
-		_particles[i].y() += d(gen)/20;
-		_particles[i].z() += d(gen)/500;
-		//cout << d(gen) << endl;
+		
+		std::random_device rd{};
+	    std::mt19937 gen{rd()};
 
-	}
+	    // values near the mean are the most likely
+	    // standard deviation affects the dispersion of generated values from the mean
+	    std::normal_distribution<> d{0,1};
 
-	// IMPLEMENT MOTION MODEL
-	Eigen::Vector3d particles_bar[P_COUNT];
-
-	for (int i=0; i<P_COUNT; i++) {
-		particles_bar[i] = _particles[i];
-
-	}
+	   	Eigen::Vector3d particles_bar[P_COUNT];
 
 
-    // find weights
+	    if(_motion_step_complete == false) {
 
-	// find expected UWB positions CHANGE TO USE POSE FROM PARTICLE AVERAGES
-	Eigen::Vector3d uwb1_init(-0.21, -0.21, 0);
-	Eigen::Vector3d uwb2_init(0.21, -0.21, 0);
-	Eigen::Vector3d uwb3_init(-0.21, 0.21, 0);
+	    	double d = 0.25;	// distance travelled with each roll
 
-	Eigen::Quaterniond q;
-	q.w() = _orientation.orientation.w;
-	q.x() = _orientation.orientation.x;
-	q.y() = _orientation.orientation.y;
-	q.z() = _orientation.orientation.z;
+	    	// when rolling, add distance rolled to particles
+	    	// NEED TO ADD NOISE
+			for (int i=0; i<P_COUNT; i++) {
+				particles_bar[i].x() = _particles[i].x() + d*cos(_u); // propagate x;
+				particles_bar[i].y() = _particles[i].y() + d*sin(_u); // propagate y;
+				particles_bar[i].z() = _particles[i].z(); // propagate z
 
-	uwb1_init = q * uwb1_init;
-	uwb2_init = q * uwb2_init;
-	uwb3_init = q * uwb3_init;
-
-	Eigen::Vector3d uwb1_hat = uwb1_init + _pos_estimate;
-	Eigen::Vector3d uwb2_hat = uwb2_init + _pos_estimate;	
-	Eigen::Vector3d uwb3_hat = uwb3_init + _pos_estimate;
-
-	double prob_x1;
-	double prob_y1;
-	double prob_z1;
-	double prob_x2;
-	double prob_y2;
-	double prob_z2;
-	double prob_x3;
-	double prob_y3;
-	double prob_z3;
-	double var_x = 0.01;
-	double var_y = 0.01;
-	double var_z = 0.01;
-	Eigen::Vector3d uwb1_test;
-	Eigen::Vector3d uwb2_test;
-	Eigen::Vector3d uwb3_test;
-
-	double weights[P_COUNT];
+			}
+			_motion_step_complete = true;
 
 
-	for (int i=0; i<P_COUNT; i++) {
+	    } else {
 
-		// find predicted uwb position for each particle
-		uwb1_test = uwb1_init + particles_bar[i];
-		uwb2_test = uwb2_init + particles_bar[i];
-		uwb3_test = uwb3_init + particles_bar[i];
+	    	// if not rolling, predict state to stay the same
+			for (int i=0; i<P_COUNT; i++) {
+				particles_bar[i] = _particles[i];
 
-		//cout << "test: " << uwb1_test.y() << endl << "pred: " << uwb1_hat.y() << endl;
+			}
 
-		// find probability of each predicted vs measured position
-		prob_x1 = exp(-0.5 * (uwb1_test.x() - uwb1_hat.x())*(uwb1_test.x() - uwb1_hat.x()) / var_x);
-		prob_y1 = exp(-0.5 * (uwb1_test.y() - uwb1_hat.y())*(uwb1_test.y() - uwb1_hat.y()) / var_x);
-		prob_z1 = exp(-0.5 * (uwb1_test.z() - uwb1_hat.z())*(uwb1_test.z() - uwb1_hat.z()) / var_x);
-		prob_x2 = exp(-0.5 * (uwb2_test.x() - uwb2_hat.x())*(uwb1_test.x() - uwb2_hat.x()) / var_x);
-		prob_y2 = exp(-0.5 * (uwb2_test.y() - uwb2_hat.y())*(uwb1_test.y() - uwb2_hat.y()) / var_x);
-		prob_z2 = exp(-0.5 * (uwb2_test.z() - uwb2_hat.z())*(uwb1_test.z() - uwb2_hat.z()) / var_x);
-		prob_x3 = exp(-0.5 * (uwb3_test.x() - uwb3_hat.x())*(uwb1_test.x() - uwb3_hat.x()) / var_x);
-		prob_y3 = exp(-0.5 * (uwb3_test.y() - uwb3_hat.y())*(uwb1_test.y() - uwb3_hat.y()) / var_x);
-		prob_z3 = exp(-0.5 * (uwb3_test.z() - uwb3_hat.z())*(uwb1_test.z() - uwb3_hat.z()) / var_x);
+	    	// add noise
+			for (int i=0; i<P_COUNT; i++) {
+			particles_bar[i].x() = particles_bar[i].x() + d(gen)/50;
+			particles_bar[i].y() = particles_bar[i].y() + d(gen)/50;
+			particles_bar[i].z() = particles_bar[i].z() + d(gen)/500;
+			//cout << d(gen) << endl;
 
-		weights[i] = prob_x1 * prob_y1 * prob_z1 * prob_x2 * prob_y2 * prob_z2 * prob_x3 * prob_y3 * prob_z3;
+			}
 
-	}
-/**
-	// normalize weights to 1
-	double total;
-	for (int i=0; i<P_COUNT; i++) {
-		total += weights[i];
-	}
-	cout <<endl<< "Weights: " << endl;
-	for (int i=0; i<P_COUNT; i++) {
-		weights[i] = weights[i] / total;
-		//cout << weights[i]<<endl;
-	}
-	**/
+	    }
 
-	// create cumulative weights
-	double cum_weights[P_COUNT];
-	double running_cum = 0;
-	//cout <<endl<< "Cum. Weights: " << endl;
-	for (int i=0; i<P_COUNT; i++) {
-		running_cum += weights[i];
-		cum_weights[i] = running_cum;
-		//cout << cum_weights[i]<<endl;
-	}
 
-	//normalize
-	for (int i=0; i<P_COUNT; i++) {
-		cum_weights[i] = cum_weights[i] / cum_weights[P_COUNT-1];
-		//cout << cum_weights[i]<<endl;
-	}
+	    // find weights
 
-	//cout << cum_weights[99] << endl;
+		// find expected UWB positions
+		Eigen::Vector3d uwb1_init(-0.21, -0.21, 0);
+		Eigen::Vector3d uwb2_init(0.21, -0.21, 0);
+		Eigen::Vector3d uwb3_init(-0.21, 0.21, 0);
 
-	std::uniform_real_distribution<double> dist(0.0, 1.0);
+		Eigen::Quaterniond q;
+		q.w() = _orientation.orientation.w;
+		q.x() = _orientation.orientation.x;
+		q.y() = _orientation.orientation.y;
+		q.z() = _orientation.orientation.z;
 
-	double random_num;
-	int j;
+		uwb1_init = q * uwb1_init;
+		uwb2_init = q * uwb2_init;
+		uwb3_init = q * uwb3_init;
 
-	// draw new particles
-	for (int i=0; i<P_COUNT; i++) {
-		random_num = dist(gen);
-		//cout << random_num << endl;
-		for (j=0; j<P_COUNT; j++) {
-			if(cum_weights[j] > random_num) {break;}
+
+		// Eigen::Vector3d uwb1_hat = uwb1_init + particle_avg_bar;
+		// Eigen::Vector3d uwb2_hat = uwb2_init + particle_avg_bar;	
+		// Eigen::Vector3d uwb3_hat = uwb3_init + particle_avg_bar;
+
+		double prob_x1;
+		double prob_y1;
+		double prob_z1;
+		double prob_x2;
+		double prob_y2;
+		double prob_z2;
+		double prob_x3;
+		double prob_y3;
+		double prob_z3;
+		double var_x = 0.1;
+		double var_y = 0.1;
+		double var_z = 0.005;
+		Eigen::Vector3d uwb1_hat;
+		Eigen::Vector3d uwb2_hat;
+		Eigen::Vector3d uwb3_hat;
+
+		double weights[P_COUNT];
+
+
+		for (int i=0; i<P_COUNT; i++) {
+
+			// find predicted uwb position for each particle
+			uwb1_hat = uwb1_init + particles_bar[i];
+			uwb2_hat = uwb2_init + particles_bar[i];
+			uwb3_hat = uwb3_init + particles_bar[i];
+
+			//cout << "meas: " << _uwb_pos[0].back().x() << endl << "pred: " << uwb1_hat.x() << endl;
+
+			// find probability of each predicted vs measured position
+			prob_x1 = exp(-0.5 * (_uwb_pos[0].back().x() - uwb1_hat.x())*(_uwb_pos[0].back().x() - uwb1_hat.x()) / var_x);
+			prob_y1 = exp(-0.5 * (_uwb_pos[0].back().y() - uwb1_hat.y())*(_uwb_pos[0].back().y() - uwb1_hat.y()) / var_x);
+			prob_z1 = exp(-0.5 * (_uwb_pos[0].back().z() - uwb1_hat.z())*(_uwb_pos[0].back().z() - uwb1_hat.z()) / var_x);
+			prob_x2 = exp(-0.5 * (_uwb_pos[1].back().x() - uwb2_hat.x())*(_uwb_pos[1].back().x() - uwb2_hat.x()) / var_x);
+			prob_y2 = exp(-0.5 * (_uwb_pos[1].back().y() - uwb2_hat.y())*(_uwb_pos[1].back().y() - uwb2_hat.y()) / var_x);
+			prob_z2 = exp(-0.5 * (_uwb_pos[1].back().z() - uwb2_hat.z())*(_uwb_pos[1].back().z() - uwb2_hat.z()) / var_x);
+			prob_x3 = exp(-0.5 * (_uwb_pos[2].back().x() - uwb3_hat.x())*(_uwb_pos[2].back().x() - uwb3_hat.x()) / var_x);
+			prob_y3 = exp(-0.5 * (_uwb_pos[2].back().y() - uwb3_hat.y())*(_uwb_pos[2].back().y() - uwb3_hat.y()) / var_x);
+			prob_z3 = exp(-0.5 * (_uwb_pos[2].back().z() - uwb3_hat.z())*(_uwb_pos[2].back().z() - uwb3_hat.z()) / var_x);
+
+			weights[i] = prob_x1 * prob_y1 * prob_z1 * prob_x2 * prob_y2 * prob_z2 * prob_x3 * prob_y3 * prob_z3;
+
 		}
 
-		// add drawn particles to list
-		_particles[i] = particles_bar[j];
+		// create cumulative weights
+		double cum_weights[P_COUNT];
+		double running_cum = 0;
+		//cout <<endl<< "Cum. Weights: " << endl;
+		for (int i=0; i<P_COUNT; i++) {
+			running_cum += weights[i];
+			cum_weights[i] = running_cum;
+			//cout << cum_weights[i]<<endl;
+		}
+
+		//normalize
+		for (int i=0; i<P_COUNT; i++) {
+			cum_weights[i] = cum_weights[i] / cum_weights[P_COUNT-1];
+			//cout << cum_weights[i]<<endl;
+		}
+
+		//cout << cum_weights[99] << endl;
+
+		std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+		double random_num;
+		int j;
+
+		// draw new particles
+		for (int i=0; i<P_COUNT; i++) {
+			random_num = dist(gen);
+			//cout << random_num << endl;
+			for (j=0; j<P_COUNT; j++) {
+				if(cum_weights[j] > random_num) {break;}
+			}
+
+			// add drawn particles to list
+			_particles[i] = particles_bar[j];
+			
+			//cout << particles_bar[j] <<endl<<endl;
+		}
+
 		find_particle_avg();
-		//cout << particles_bar[j] <<endl<<endl;
+
+	 
 	}
-
-
-
- 
-
 	return;
 }
 
@@ -376,7 +396,7 @@ void State_Estimation::step( void ) {
 	Eigen::Vector2d _mu_pred;
 	Eigen::Matrix2d _sigma_pred;
 
-	if (_rolling == false && (_EKF_roll_step_complete == true)) {
+	if (_rolling == false && (_motion_step_complete == true)) {
 		//cout << "state prediction staying the same" << endl;
 		// if not rolling, predicted state is the same as the current state
 		_mu_pred = _mu;
@@ -384,9 +404,9 @@ void State_Estimation::step( void ) {
 	} else if(_rolling == true) {
 		//cout << "state prediction staying the same" << endl;
 		// if rolling, do not run prediction step
-		_EKF_roll_step_complete = false;
+		_motion_step_complete = false;
 
-	} else if ((_rolling == false) && (_EKF_roll_step_complete == false)) {
+	} else if ((_rolling == false) && (_motion_step_complete == false)) {
 		// cout << "propagating state with roll" << endl;
 		// if just finished rolling, propagate state using the heading of the roll
 
@@ -405,7 +425,7 @@ void State_Estimation::step( void ) {
 
 		_sigma_pred = _sigma + R;
 
-		_EKF_roll_step_complete = true;
+		_motion_step_complete = true;
 
 		// cout << _mu_pred << endl;
 		// cout << _sigma_pred << endl;

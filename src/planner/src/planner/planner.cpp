@@ -135,8 +135,8 @@ void Planner::handleOrientation(const sensor_msgs::Imu::ConstPtr& msg) {
 	return;
 }
 
-void Planner::handlePosition(const geometry_msgs::Point::ConstPtr& msg){
-	_pose.position = *msg;
+void Planner::handlePosition(const geometry_msgs::PoseStamped::ConstPtr& msg){
+	_pose.position = msg->pose.position;
 	return;
 }
 
