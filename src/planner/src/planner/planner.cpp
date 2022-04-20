@@ -140,15 +140,15 @@ void Planner::handlePosition(const geometry_msgs::PoseStamped::ConstPtr& msg){
 	return;
 }
 
-void Planner::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg ) {
-	// update pose class variable
-	_pose = msg->pose[1];
-	// cout << "____________________" << endl;
-	// cout << _pose << endl << endl;	
-	findFaceState();
+// void Planner::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg ) {
+// 	// update pose class variable
+// 	_pose = msg->pose[1];
+// 	// cout << "____________________" << endl;
+// 	// cout << _pose << endl << endl;	
+// 	findFaceState();
 
-	return;
-}
+// 	return;
+// }
 
 void Planner::handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg) {
 	_rolling_state = msg->data;

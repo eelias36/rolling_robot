@@ -10,7 +10,7 @@
 #include "std_msgs/Bool.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
-#include "gazebo_msgs/LinkStates.h"
+// #include "gazebo_msgs/LinkStates.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Twist.h"
@@ -19,7 +19,7 @@ class Planner {
 	public:
 		Planner();
 		virtual ~Planner();
-		void handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg );
+		// void handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& msg );
 		void findFaceState(void);
 		void handle_cmd_vel(const geometry_msgs::Twist::ConstPtr& msg);
 		void handleOrientation(const sensor_msgs::Imu::ConstPtr& msg);
