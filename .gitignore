@@ -2,3 +2,7 @@
 /build
 src/CMakeLists.txt
 .catkin_workspace
+
+src/rolling_robot_gazebo/CATKIN_IGNORE
+src/rolling_robot_control/CATKIN_IGNORE
+src/rolling_robot_description/CATKIN_IGNORE
