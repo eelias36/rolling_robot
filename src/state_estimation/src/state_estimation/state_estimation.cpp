@@ -58,26 +58,82 @@ void State_Estimation::handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg) 
 	return;
 }
 
+void State_Estimation::handle_uwb1_msg( const geometry_msgs::Point::ConstPtr& msg ) {
 
-void State_Estimation::handle_uwb_msg( const geometry_msgs::PoseArray::ConstPtr& msg ) {
+	Eigen::Vector3d new_pos;
 
-	Eigen::Vector3d new_pos[3];
+	new_pos.x() = msg->x;
+	new_pos.y() = msg->y;
+	new_pos.z() = msg->z;
 
-	new_pos[0].x() = msg->poses[0].position.x;
-	new_pos[0].y() = msg->poses[0].position.y;
-	new_pos[0].z() = msg->poses[0].position.z;
+	_uwb_pos[0].push_back(new_pos);
+	check_uwb_msgs();
+	return;
+}
 
-	new_pos[1].x() = msg->poses[1].position.x;
-	new_pos[1].y() = msg->poses[1].position.y;
-	new_pos[1].z() = msg->poses[1].position.z;
+void State_Estimation::handle_uwb2_msg( const geometry_msgs::Point::ConstPtr& msg ) {
 
-	new_pos[2].x() = msg->poses[2].position.x;
-	new_pos[2].y() = msg->poses[2].position.y;
-	new_pos[2].z() = msg->poses[2].position.z;
+	Eigen::Vector3d new_pos;
 
-	_uwb_pos[0].push_back(new_pos[0]);
-	_uwb_pos[1].push_back(new_pos[1]);
-	_uwb_pos[2].push_back(new_pos[2]);
+	new_pos.x() = msg->x;
+	new_pos.y() = msg->y;
+	new_pos.z() = msg->z;
+
+	_uwb_pos[1].push_back(new_pos);
+	check_uwb_msgs();
+	return;
+}
+
+void State_Estimation::handle_uwb3_msg( const geometry_msgs::Point::ConstPtr& msg ) {
+
+	Eigen::Vector3d new_pos;
+
+	new_pos.x() = msg->x;
+	new_pos.y() = msg->y;
+	new_pos.z() = msg->z;
+
+	_uwb_pos[2].push_back(new_pos);
+	check_uwb_msgs();
+	return;
+}
+
+
+void State_Estimation::check_uwb_msgs( void ) {
+
+	// Eigen::Vector3d new_pos[3];
+
+	// std::random_device rd{};
+	// std::mt19937 gen{rd()};
+
+ //    // values near the mean are the most likely
+ //    // standard deviation affects the dispersion of generated values from the mean
+ //    std::normal_distribution<> norm{0,1};
+
+ //    _real_pos.x() = (msg->poses[1].position.x + msg->poses[2].position.x) / 2;
+ //    _real_pos.y() = (msg->poses[1].position.y + msg->poses[2].position.y) / 2;
+ //    _real_pos.z() = (msg->poses[1].position.z + msg->poses[2].position.z) / 2;
+
+
+ //    double noise_stddev = 0.2;
+ //    double x_bias = 0.05;
+ //    double y_bias = -0.05;
+ //    double z_bias = 0.05;
+
+	// new_pos[0].x() = msg->poses[0].position.x + norm(gen)*noise_stddev + x_bias;
+	// new_pos[0].y() = msg->poses[0].position.y + norm(gen)*noise_stddev - y_bias;
+	// new_pos[0].z() = msg->poses[0].position.z + norm(gen)*noise_stddev - z_bias;
+
+	// new_pos[1].x() = msg->poses[1].position.x + norm(gen)*noise_stddev + x_bias;
+	// new_pos[1].y() = msg->poses[1].position.y + norm(gen)*noise_stddev - y_bias;
+	// new_pos[1].z() = msg->poses[1].position.z + norm(gen)*noise_stddev + z_bias;
+
+	// new_pos[2].x() = msg->poses[2].position.x + norm(gen)*noise_stddev - x_bias;
+	// new_pos[2].y() = msg->poses[2].position.y + norm(gen)*noise_stddev + y_bias;
+	// new_pos[2].z() = msg->poses[2].position.z + norm(gen)*noise_stddev + z_bias;
+
+	// _uwb_pos[0].push_back(new_pos[0]);
+	// _uwb_pos[1].push_back(new_pos[1]);
+	// _uwb_pos[2].push_back(new_pos[2]);
 
 
 	// keep rolling average only of past 5 measurements
@@ -129,6 +185,24 @@ sensor_msgs::PointCloud State_Estimation::particle_msg( void ) const {
 void State_Estimation::callback(const ros::TimerEvent& event) {
 	particle_step();
 	return;
+}
+
+std_msgs::Float64 State_Estimation::bad_estimate_error_msg(void) const {
+
+	std_msgs::Float64 msg;
+
+	msg.data = (_pos_estimate - _real_pos).norm();
+
+	return msg;
+}
+		
+std_msgs::Float64 State_Estimation::particle_estimate_error_msg(void) const {
+
+	std_msgs::Float64 msg;
+
+	msg.data = (_particle_pos_estimate - _real_pos).norm();
+
+	return msg;
 }
 
 sensor_msgs::MagneticField State_Estimation::mag_field_msg(void) const {
@@ -238,7 +312,7 @@ void State_Estimation::particle_step( void ) {
 
 	    // values near the mean are the most likely
 	    // standard deviation affects the dispersion of generated values from the mean
-	    std::normal_distribution<> d{0,1};
+	    std::normal_distribution<> norm{0,1};
 
 	   	Eigen::Vector3d particles_bar[P_COUNT];
 
@@ -250,9 +324,9 @@ void State_Estimation::particle_step( void ) {
 	    	// when rolling, add distance rolled to particles
 	    	// NEED TO ADD NOISE
 			for (int i=0; i<P_COUNT; i++) {
-				particles_bar[i].x() = _particles[i].x() + d*cos(_u); // propagate x;
-				particles_bar[i].y() = _particles[i].y() + d*sin(_u); // propagate y;
-				particles_bar[i].z() = _particles[i].z(); // propagate z
+				particles_bar[i].x() = _particles[i].x() + d*cos(_u) + norm(gen)/20; // propagate x;
+				particles_bar[i].y() = _particles[i].y() + d*sin(_u) + norm(gen)/20; // propagate y;
+				particles_bar[i].z() = _particles[i].z() + norm(gen)/50; // propagate z
 
 			}
 			_motion_step_complete = true;
@@ -268,9 +342,9 @@ void State_Estimation::particle_step( void ) {
 
 	    	// add noise
 			for (int i=0; i<P_COUNT; i++) {
-			particles_bar[i].x() = particles_bar[i].x() + d(gen)/50;
-			particles_bar[i].y() = particles_bar[i].y() + d(gen)/50;
-			particles_bar[i].z() = particles_bar[i].z() + d(gen)/500;
+			particles_bar[i].x() = particles_bar[i].x() + norm(gen)/100;
+			particles_bar[i].y() = particles_bar[i].y() + norm(gen)/100;
+			particles_bar[i].z() = particles_bar[i].z() + norm(gen)/500;
 			//cout << d(gen) << endl;
 
 			}
@@ -311,7 +385,7 @@ void State_Estimation::particle_step( void ) {
 		double prob_z3;
 		double var_x = 0.1;
 		double var_y = 0.1;
-		double var_z = 0.005;
+		double var_z = 0.01;
 		Eigen::Vector3d uwb1_hat;
 		Eigen::Vector3d uwb2_hat;
 		Eigen::Vector3d uwb3_hat;

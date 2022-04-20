@@ -26,7 +26,10 @@ class State_Estimation {
 		State_Estimation(const Eigen::Vector3d& alpha);
 		virtual ~State_Estimation();
 		void handle_imu_msg( const sensor_msgs::Imu::ConstPtr& msg );
-		void handle_uwb_msg( const geometry_msgs::PoseArray::ConstPtr& msg );
+		void handle_uwb1_msg( const geometry_msgs::Point::ConstPtr& msg );
+		void handle_uwb2_msg( const geometry_msgs::Point::ConstPtr& msg );
+		void handle_uwb3_msg( const geometry_msgs::Point::ConstPtr& msg );
+		void check_uwb_msgs( void );
 		void handle_heading_msg( const std_msgs::Float64::ConstPtr& msg );
 		void handle_rolling_msg( const std_msgs::Bool::ConstPtr& msg );
 		void callback(const ros::TimerEvent& event);
@@ -39,6 +42,8 @@ class State_Estimation {
 		geometry_msgs::Point pos_msg( void ) const;
 		sensor_msgs::PointCloud particle_msg( void ) const;
 		geometry_msgs::PoseStamped pose_msg( void ) const;
+		std_msgs::Float64 bad_estimate_error_msg(void) const;
+		std_msgs::Float64 particle_estimate_error_msg(void) const;
 
 
 	protected:
@@ -55,6 +60,7 @@ class State_Estimation {
 		sensor_msgs::Imu _orientation;
 		std::deque <Eigen::Vector3d> _uwb_pos[3];
 		Eigen::Vector3d _pos_estimate;
+		Eigen::Vector3d _real_pos;
 		Eigen::Vector3d _particles[P_COUNT];
 		void find_particle_avg( void );
 

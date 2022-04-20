@@ -38,16 +38,22 @@ void Uwb_interface::handleGazeboState( const gazebo_msgs::LinkStates::ConstPtr& 
 	return;
 }
 
-geometry_msgs::PoseArray Uwb_interface::uwb_pose_msg(void) const{
-	geometry_msgs::PoseArray msg;
-	msg.poses.resize(3);
+geometry_msgs::Point Uwb_interface::uwb_pos_msg(const int uwb_id) const{
+	// geometry_msgs::PoseArray msg;
+	// msg.poses.resize(3);
 
-	msg.header.stamp = ros::Time::now();
-	for(int i=0; i<3; i++) {
-		msg.poses[i].position.x = _uwb_pos[i].x();
-		msg.poses[i].position.y = _uwb_pos[i].y();
-		msg.poses[i].position.z = _uwb_pos[i].z();
-	}
+	// msg.header.stamp = ros::Time::now();
+	// for(int i=0; i<3; i++) {
+	// 	msg.poses[i].position.x = _uwb_pos[i].x();
+	// 	msg.poses[i].position.y = _uwb_pos[i].y();
+	// 	msg.poses[i].position.z = _uwb_pos[i].z();
+	// }
+
+	geometry_msgs::Point msg;
+
+	msg.x = _uwb_pos[uwb_id].x();
+	msg.y = _uwb_pos[uwb_id].y();
+	msg.z = _uwb_pos[uwb_id].z();
 
 	return msg;
 }

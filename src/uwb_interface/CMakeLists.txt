@@ -17,6 +17,7 @@ find_package(Eigen3)
 include_directories(${EIGEN3_INCLUDE_DIR})
 message("EIGEN3_INCLUDE_DIR:${EIGEN3_INCLUDE_DIR}")
 
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -153,6 +154,10 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(${PROJECT_NAME}_node
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
+)
+
+catkin_install_python(PROGRAMS src/uwb_reader.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 #############
