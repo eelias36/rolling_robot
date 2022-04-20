@@ -67,7 +67,13 @@ void State_Estimation::handle_uwb1_msg( const geometry_msgs::Point::ConstPtr& ms
 	new_pos.z() = msg->z;
 
 	_uwb_pos[0].push_back(new_pos);
-	check_uwb_msgs();
+
+	// keep rolling average only of past 5 measurements
+	if (_uwb_pos[0].size() > 5) {
+		_uwb_pos[0].pop_front();
+	}
+
+	//check_uwb_msgs();
 	return;
 }
 
@@ -80,7 +86,13 @@ void State_Estimation::handle_uwb2_msg( const geometry_msgs::Point::ConstPtr& ms
 	new_pos.z() = msg->z;
 
 	_uwb_pos[1].push_back(new_pos);
-	check_uwb_msgs();
+
+	// keep rolling average only of past 5 measurements
+	if (_uwb_pos[1].size() > 5) {
+		_uwb_pos[1].pop_front();
+	}
+
+	//check_uwb_msgs();
 	return;
 }
 
@@ -93,7 +105,13 @@ void State_Estimation::handle_uwb3_msg( const geometry_msgs::Point::ConstPtr& ms
 	new_pos.z() = msg->z;
 
 	_uwb_pos[2].push_back(new_pos);
-	check_uwb_msgs();
+
+	// keep rolling average only of past 5 measurements
+	if (_uwb_pos[2].size() > 5) {
+		_uwb_pos[2].pop_front();
+	}
+
+	//check_uwb_msgs();
 	return;
 }
 
@@ -137,11 +155,13 @@ void State_Estimation::check_uwb_msgs( void ) {
 
 
 	// keep rolling average only of past 5 measurements
-	if (_uwb_pos[0].size() > 5) {
-		_uwb_pos[0].pop_front();
-		_uwb_pos[1].pop_front();
-		_uwb_pos[2].pop_front();
-	}
+	// if (_uwb_pos[0].size() > 5) {
+	// 	_uwb_pos[0].pop_front();
+	// 	_uwb_pos[1].pop_front();
+	// 	_uwb_pos[2].pop_front();
+	// }
+
+
 
 	find_pos();
 
