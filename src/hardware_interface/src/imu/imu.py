@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #This code was written by Caleb G. Teague in 2017
 
 """To do:
@@ -12,6 +12,11 @@ from smbus2 import SMBus
 import time
 import math
 import _thread as thread
+import rospy
+
+def imu_test:
+	print('hi')
+	return
 
 class MinIMU_v5_pi:
 	"""
