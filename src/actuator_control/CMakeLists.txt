@@ -137,6 +137,7 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/actuator_control_node.cpp)
 add_executable(${PROJECT_NAME}_node_sim src/actuator_control_node_sim.cpp)
+add_executable(${PROJECT_NAME}_node_test src/actuator_control_node_test.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,6 +149,8 @@ add_executable(${PROJECT_NAME}_node_sim src/actuator_control_node_sim.cpp)
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(${PROJECT_NAME}_node_sim ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_node_test ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
@@ -155,6 +158,11 @@ target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
 target_link_libraries(${PROJECT_NAME}_node_sim
+  actuator_control
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(${PROJECT_NAME}_node_test
   actuator_control
   ${catkin_LIBRARIES}
 )

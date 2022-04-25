@@ -4,7 +4,8 @@ from std_msgs.msg import String, ByteMultiArray, Float32
 from sensor_msgs.msg import Imu
 import numpy as np
 from pyquaternion import Quaternion
-from hardware_interface.imu import say_it_works, MinIMU_v5_pi
+from hardware_interface.imu import *
+from hardware_interface.SX1509 import *
 import time
 import math
 
@@ -20,15 +21,68 @@ class Hardware_interface:
         self.extended_switches_pub = rospy.Publisher("/extended_switches", ByteMultiArray, queue_size=1)
         self.retracted_switches_pub = rospy.Publisher("/retracted_switches", ByteMultiArray, queue_size=1)
         
+        # ---initialize IMU---
         self.imu = MinIMU_v5_pi()
-        self.imu_q = Quaternion(-0.2705981, -0.2705981, -0.6532815, -0.6532815)
+        self.imu_q = Quaternion(-0.2705981, -0.2705981, -0.6532815, -0.6532815) # for transform from imu frame to body frame
 
+        # ---initialize expander 1---
+        DEVICE_ADDRESS1 = 0x3E  # device address of SX1509
+
+        #Set up I2C
+        comm_port = busio.I2C(board.SCL, board.SDA)
+        device1 = I2CDevice(comm_port, DEVICE_ADDRESS1)
+
+        #Initialize the expander
+        IOExpander1 = SX1509.SX1509(comm_port)
+        IOExpander1.clock(oscDivider = 4)
+        IOExpander1.debounceTime(32)
+
+        #Set up pins
+        for pin in range(16):
+            IOExpander1.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
+
+        # ---initialize expander 2---
+        DEVICE_ADDRESS2 = 0x3F  # device address of SX1509
+
+        #Set up I2C
+        device2 = I2CDevice(comm_port, DEVICE_ADDRESS1)
+
+        #Initialize the expander
+        IOExpander2 = SX1509.SX1509(comm_port)
+        IOExpander2.clock(oscDivider = 4)
+        IOExpander2.debounceTime(32)
+
+        #Set up pins
+        for pin in range(16):
+            IOExpander2.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
+
+        # ---initialize expander 3---
+        DEVICE_ADDRESS3 = 0x70  # device address of SX1509
+
+        #Set up I2C
+        device3 = I2CDevice(comm_port, DEVICE_ADDRESS1)
+
+        #Initialize the expander
+        IOExpander3 = SX1509.SX1509(comm_port)
+        IOExpander3.clock(oscDivider = 4)
+        IOExpander3.debounceTime(32)
+
+        #Set up pins
+        for pin in range(16):
+            IOExpander3.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
+
+        return
 
 
     def relay_states_callback(self, data):
+        for i in range(16):
+            relay_states_temp[i] = data.data[i]
+
+        self.relay_states = relay_states_temp.copy()
         return
 
     def driver_speed_callback(self, data):
+        self.driver_speed = data.data
         return
         
     def start_running(self):

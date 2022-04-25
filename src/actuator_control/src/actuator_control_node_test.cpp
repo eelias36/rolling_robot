@@ -31,8 +31,12 @@ main( int argc, char* argv[] ){
 	ros::Duration(2.0).sleep();
 
 	while( ros::ok() ){
+		actuators.home(10);
+		relay_states_publisher.publish( actuators.relay_msg() );
+		driver_speed_publisher.publish( actuators.driver_speed_msg() );
 		//cmd_dir_publisher.publish( actuators.cmd_dir_msg() );
-		rolling_publisher.publish( actuators.rolling_msg() );
+		// rolling_publisher.publish( actuators.rolling_msg() );
+
 		ros::spinOnce();
 		timer.sleep();
 	}

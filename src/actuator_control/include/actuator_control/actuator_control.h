@@ -17,12 +17,15 @@ class Actuators {
 		void update_command_msgs_sim(void);
 		void handle_command(const geometry_msgs::Twist::ConstPtr& msg);
 		void handle_faceState(const std_msgs::Int8::ConstPtr& msg);
+		void handle_extended_switches(const std_msgs::ByteMultiArray::ConstPtr& msg);
+		void handle_retracted_switches(const std_msgs::ByteMultiArray::ConstPtr& msg);
 		void roll_fwd_update_sim(void);
 		void roll_side_update_sim(void);
 		void home_sim(void);
 		void home(const float& speed);
 		void update(void);
 		void actuator_position_update_sim(void);
+		void run_test();
 		std_msgs::Float64 command_msgs[16];
 		std_msgs::Bool rolling_msg(void);
 		ros::Publisher cmd_dir_publisher;

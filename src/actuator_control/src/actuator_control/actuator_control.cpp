@@ -90,6 +90,19 @@ std_msgs::ByteMultiArray Actuators::relay_msg(void) {
 	return msg;
 }
 
+void Actuators::handle_extended_switches(const std_msgs::ByteMultiArray::ConstPtr& msg) {
+	for(int i=0; i<16; i++) {
+		_out_switch_state[i] = msg->data[i];
+	}
+	return;
+}
+void Actuators::handle_retracted_switches(const std_msgs::ByteMultiArray::ConstPtr& msg) {
+	for(int i=0; i<16; i++) {
+		_in_switch_state[i] = msg->data[i];
+	}
+	return;
+}
+
 std_msgs::Float32 Actuators::driver_speed_msg(void) {
 	std_msgs::Float32 msg;
 
@@ -100,20 +113,23 @@ std_msgs::Float32 Actuators::driver_speed_msg(void) {
 
 void Actuators::home(const float& speed){
 
+	if (_commanded_actuator == -1 && !_homing_complete) {
+		_commanded_actuator = 0;
+	}
+
+	// if actuator is extending
 	if (!_retracting && !_homing_complete) {
 
 		bool _test_retracting = true;
 
 		// extend actuators until reach end of travel
-		for (int i=0; i<16; i++) {
-			if( _out_switch_state[i] == true ) {
-				// not at end of travel
-				_relay_state[i] = 1;
-				_test_retracting = false;
-			} else {
-				// reaches end of travel
-				_relay_state[i] = 0;
-			}
+		if( _out_switch_state[_commanded_actuator] == true ) {
+			// not at end of travel
+			_relay_state[_commanded_actuator] = 1;
+			_test_retracting = false;
+		} else {
+			// reaches end of travel
+			_relay_state[_commanded_actuator] = 0;
 		}
 
 		if (_test_retracting) {
@@ -123,26 +139,28 @@ void Actuators::home(const float& speed){
 		_driver_speed = speed;
 	}
 
+	// if actuator is retracting
 	if(_retracting && !_homing_complete) {
 		
 		_driver_speed = -speed;
 
 		bool _test_complete = true;
 
-		// retract actuators until reach end of travel
-		for (int i=0; i<16; i++) {
-			if( _in_switch_state[i] == false ) {
-				// not at end of travel
-				_relay_state[i] = 1;
-				_test_complete = false;
-			} else {
-				// reaches end of travel
-				_relay_state[i] = 0;
-			}
+		// retract actuator until reach end of travel
+		if( _in_switch_state[_commanded_actuator] == false ) {
+			// not at end of travel
+			_relay_state[_commanded_actuator] = 1;
+			_test_complete = false;
+		} else {
+			// reaches end of travel
+			_relay_state[_commanded_actuator] = 0;
 		}
 
-		if (_test_complete) {
+		// if the last actuator fully retracted
+		if (_test_complete && (_commanded_actuator==15)) {
 			_homing_complete = true;
+		} else if (_test_complete) {	// if another actuator fully retracted, move on to the next
+			_commanded_actuator++;
 		}
 	}
 	return;
