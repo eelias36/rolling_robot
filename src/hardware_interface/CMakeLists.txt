@@ -12,8 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   message_runtime
   roscpp
   rospy
-  std_msgs
   sensor_msgs
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -73,7 +73,7 @@ catkin_python_setup()
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs#   std_msgs
+#   sensor_msgs#   std_msgs
 # )
 
 ################################################
@@ -108,7 +108,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hardware_interface
-  CATKIN_DEPENDS message_generation message_runtime roscpp rospy std_msgs sensor_msgs
+#  CATKIN_DEPENDS message_generation message_runtime roscpp rospy sensor_msgs std_msgs
 #  DEPENDS system_lib
 )
 
@@ -163,8 +163,7 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 # catkin_install_python(PROGRAMS
-#   nodes/hardware_interface
-# #   src/MinIMU_v5_pi.py
+#   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 

@@ -1,14 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import rospy
 from std_msgs.msg import String, ByteMultiArray, Float32
 from sensor_msgs.msg import Imu
 import numpy as np
 from pyquaternion import Quaternion
-# from imu import test
-# from imu import MinIMU_v5_pi
-from imu import *
+from hardware_interface.imu import say_it_works, MinIMU_v5_pi
 import time
-
 
 
 class Hardware_interface:
@@ -17,10 +14,12 @@ class Hardware_interface:
 
         rospy.Subscriber("/relay_states", ByteMultiArray, self.relay_states_callback, queue_size=1)
         rospy.Subscriber("/driver_speed", Float32, self.driver_speed_callback, queue_size=1)
-        # imu_test()
+
         self.imu_pub = rospy.Publisher("/imu/data_raw", Imu, queue_size=1)
-        imu_test()
-        self.IMU = MinIMU_v5_pi()
+        self.extended_switches_pub = rospy.Publisher("/extended_switches", ByteMultiArray, queue_size=1)
+        self.retracted_switches_pub = rospy.Publisher("/retracted_switches", ByteMultiArray, queue_size=1)
+        
+        self.imu = MinIMU_v5_pi()
         self.imu_q = Quaternion(-0.2705981, -0.2705981, -0.6532815, -0.6532815)
 
 
@@ -59,17 +58,6 @@ class Hardware_interface:
         imu_msg.linear_acceleration.z = accel[2]
 
         return imu_msg
-
-
-# def talker():
-#     pub = rospy.Publisher('chatter', String, queue_size=10)
-#     rospy.init_node('talker', anonymous=True)
-#     rate = rospy.Rate(10) # 10hz
-#     while not rospy.is_shutdown():
-#         hello_str = "hello world %s" % rospy.get_time()
-#         rospy.loginfo(hello_str)
-#         pub.publish(hello_str)
-#         rate.sleep()
 
 if __name__ == '__main__':
     hardware_interface = Hardware_interface()
