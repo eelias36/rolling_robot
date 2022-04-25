@@ -6,6 +6,7 @@ import numpy as np
 from pyquaternion import Quaternion
 from hardware_interface.imu import say_it_works, MinIMU_v5_pi
 import time
+import math
 
 
 class Hardware_interface:
@@ -31,7 +32,7 @@ class Hardware_interface:
         return
         
     def start_running(self):
-        rate = rospy.Rate(10) # 10hz
+        rate = rospy.Rate(30) # 30hz
         while not rospy.is_shutdown():
             self.imu_pub.publish( self.get_imu_msg() )
             rate.sleep()
@@ -39,24 +40,27 @@ class Hardware_interface:
     def get_imu_msg(self):
         imu_msg = Imu()
 
-        accel = np.array( IMU.readAccelerometer() )
-        accel = imu_q.rotate(accel)
+        accel = np.array( self.imu.readAccelerometer() )
+        accel = self.imu_q.rotate(accel)
         # print(accel)
         # print("Gyro: ")
-        gyro = np.array( IMU.readGyro() )
-        gyro = imu_q.rotate(gyro)
+        gyro = np.array( self.imu.readGyro() )
+        gyro = self.imu_q.rotate(gyro)
         # print(gyro)
 
         imu_msg.header.stamp = rospy.Time.now()
         imu_msg.header.frame_id = 'base_link'
-        imu_msg.angular_velocity.x = gyro[0]
-        imu_msg.angular_velocity.y = gyro[1]
-        imu_msg.angular_velocity.z = gyro[2]
+
+        # convert from deg/s to rad/s
+        imu_msg.angular_velocity.x = math.radians(gyro[0])
+        imu_msg.angular_velocity.y = math.radians(gyro[1])
+        imu_msg.angular_velocity.z = math.radians(gyro[2])
 
         imu_msg.linear_acceleration.x = accel[0]
         imu_msg.linear_acceleration.y = accel[1]
         imu_msg.linear_acceleration.z = accel[2]
 
+        # print("published")
         return imu_msg
 
 if __name__ == '__main__':

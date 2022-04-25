@@ -1,14 +1,12 @@
 <launch>
+
+
+  <!--
   <node name="actuator_control_node" pkg="actuator_control" type="actuator_control_node" output="screen"/>
   <node name="uwb_interface_node" pkg="uwb_interface" type="uwb_interface_node" output="screen"/>
   <node name="planner_node" pkg="planner" type="planner_node" output="screen"/>
-  <node name="state_estimation_node" pkg="state_estimation" type="state_estimation_node" output="screen"/>
 
-  <!--
-
--->
-
-  <node name="uwb_1" pkg="uwb_reader" type="uwb_reader.py">
+    <node name="uwb_1" pkg="uwb_reader" type="uwb_reader.py">
       <rosparam>
           serial_port: '/dev/'
           topic_name: "uwb1"
@@ -26,15 +24,18 @@
           topic_name: "uwb3"
       </rosparam>
   </node>
+-->
+<node name="state_estimation_node" pkg="state_estimation" type="state_estimation_node" output="screen"/>
+<node name="hardware_interface_node" pkg="hardware_interface" type="hardware_interface_node" output="screen"/>
 
   <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter">
     <rosparam>
       world_frame: nwu
       gain: 0.1
-      zeta: 0.001
+      zeta: 0.01
       publish_tf: true
-      use_mag: true
-      use_magnetic_field_msg: true
+      use_mag: false
+      use_magnetic_field_msg: false
     </rosparam>
   </node>
 
