@@ -22,7 +22,7 @@
 #TODO: Move the registers to a new file?
 
 from adafruit_bus_device import i2c_device
-import hardware_interface.IO_Types
+import hardware_interface.IO_Types as IO_Types
 
 _SX1509_RegInputDisableB = 0x00 #Input buffer disable register - I/O[15-8] (Bank B) 0000 0000
 _SX1509_RegInputDisableA = 0x01 # Input buffer disable register - I/O[7-0] (Bank A) 0000 0000

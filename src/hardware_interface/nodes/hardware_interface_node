@@ -2,12 +2,20 @@
 import rospy
 from std_msgs.msg import String, ByteMultiArray, Float32
 from sensor_msgs.msg import Imu
+
 import numpy as np
 from pyquaternion import Quaternion
 from hardware_interface.imu import *
 from hardware_interface.SX1509 import *
+# from hardware_interface.IO_Types import * as IO_Types
+import hardware_interface.IO_Types as IO_Types
+
 import time
 import math
+
+import busio
+import board
+from adafruit_bus_device.i2c_device import I2CDevice
 
 
 class Hardware_interface:
@@ -33,13 +41,13 @@ class Hardware_interface:
         device1 = I2CDevice(comm_port, DEVICE_ADDRESS1)
 
         #Initialize the expander
-        IOExpander1 = SX1509.SX1509(comm_port)
-        IOExpander1.clock(oscDivider = 4)
-        IOExpander1.debounceTime(32)
+        self.IOExpander1 = SX1509(comm_port)
+        self.IOExpander1.clock(oscDivider = 4)
+        self.IOExpander1.debounceTime(32)
 
         #Set up pins
         for pin in range(16):
-            IOExpander1.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
+            self.IOExpander1.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
 
         # ---initialize expander 2---
         DEVICE_ADDRESS2 = 0x3F  # device address of SX1509
@@ -48,28 +56,28 @@ class Hardware_interface:
         device2 = I2CDevice(comm_port, DEVICE_ADDRESS1)
 
         #Initialize the expander
-        IOExpander2 = SX1509.SX1509(comm_port)
-        IOExpander2.clock(oscDivider = 4)
-        IOExpander2.debounceTime(32)
+        self.IOExpander2 = SX1509(comm_port)
+        self.IOExpander2.clock(oscDivider = 4)
+        self.IOExpander2.debounceTime(32)
 
         #Set up pins
         for pin in range(16):
-            IOExpander2.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
+            self.IOExpander2.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
 
-        # ---initialize expander 3---
-        DEVICE_ADDRESS3 = 0x70  # device address of SX1509
+        # # ---initialize expander 3---
+        # DEVICE_ADDRESS3 = 0x70  # device address of SX1509
 
-        #Set up I2C
-        device3 = I2CDevice(comm_port, DEVICE_ADDRESS1)
+        # #Set up I2C
+        # device3 = I2CDevice(comm_port, DEVICE_ADDRESS1)
 
-        #Initialize the expander
-        IOExpander3 = SX1509.SX1509(comm_port)
-        IOExpander3.clock(oscDivider = 4)
-        IOExpander3.debounceTime(32)
+        # #Initialize the expander
+        # self.IOExpander3 = SX1509.SX1509(comm_port)
+        # self.IOExpander3.clock(oscDivider = 4)
+        # self.IOExpander3.debounceTime(32)
 
-        #Set up pins
-        for pin in range(16):
-            IOExpander3.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
+        # #Set up pins
+        # for pin in range(16):
+        #     self.IOExpander3.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
 
         return
 
@@ -89,7 +97,25 @@ class Hardware_interface:
         rate = rospy.Rate(30) # 30hz
         while not rospy.is_shutdown():
             self.imu_pub.publish( self.get_imu_msg() )
+            self.extended_switches_pub.publish( self.get_extended_switches_msg() )
+            self.retracted_switches_pub.publish( self.get_retracted_switches_msg() )
             rate.sleep()
+
+    def get_extended_switches_msg(self):
+        extended_switches_msg = ByteMultiArray()
+
+        for i in range(16):
+            extended_switches_msg.data.append( self.IOExpander1.digitalRead(i) )
+
+        return extended_switches_msg
+
+    def get_retracted_switches_msg(self):
+        retracted_switches_msg = ByteMultiArray()
+
+        for i in range(16):
+            retracted_switches_msg.data.append( self.IOExpander2.digitalRead(i) )
+
+        return retracted_switches_msg
 
     def get_imu_msg(self):
         imu_msg = Imu()
