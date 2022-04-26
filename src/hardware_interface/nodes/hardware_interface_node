@@ -7,7 +7,6 @@ import numpy as np
 from pyquaternion import Quaternion
 from hardware_interface.imu import *
 from hardware_interface.SX1509 import *
-# from hardware_interface.IO_Types import * as IO_Types
 import hardware_interface.IO_Types as IO_Types
 
 import time
@@ -40,16 +39,14 @@ class Hardware_interface:
         comm_port = busio.I2C(board.SCL, board.SDA)
         device1 = I2CDevice(comm_port, DEVICE_ADDRESS1)
 
-        #Initialize the expander
+        # ---initialize expander 1 (extended switches)---
         self.IOExpander1 = SX1509(comm_port)
-        self.IOExpander1.clock(oscDivider = 4)
-        self.IOExpander1.debounceTime(32)
 
         #Set up pins
         for pin in range(16):
             self.IOExpander1.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
 
-        # ---initialize expander 2---
+        # ---initialize expander 2 (retracted switches)---
         DEVICE_ADDRESS2 = 0x3F  # device address of SX1509
 
         #Set up I2C
@@ -57,14 +54,12 @@ class Hardware_interface:
 
         #Initialize the expander
         self.IOExpander2 = SX1509(comm_port)
-        self.IOExpander2.clock(oscDivider = 4)
-        self.IOExpander2.debounceTime(32)
 
         #Set up pins
         for pin in range(16):
             self.IOExpander2.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
 
-        # # ---initialize expander 3---
+        # # ---initialize expander 3 (relay outputs)---
         # DEVICE_ADDRESS3 = 0x70  # device address of SX1509
 
         # #Set up I2C
@@ -72,12 +67,10 @@ class Hardware_interface:
 
         # #Initialize the expander
         # self.IOExpander3 = SX1509.SX1509(comm_port)
-        # self.IOExpander3.clock(oscDivider = 4)
-        # self.IOExpander3.debounceTime(32)
 
         # #Set up pins
         # for pin in range(16):
-        #     self.IOExpander3.pinMode(pin, IO_Types.PIN_TYPE_INPUT_PULLUP)
+        #     self.IOExpander3.pinMode(pin, IO_Types.PIN_TYPE_OUTPUT)
 
         return
 
@@ -87,7 +80,14 @@ class Hardware_interface:
             relay_states_temp[i] = data.data[i]
 
         self.relay_states = relay_states_temp.copy()
+        update_relay_outputs()
         return
+
+    def update_relay_outputs(self):
+        for i in range(16):
+            self.IOExpander3.digitalWrite(i, 1-self.relay_states[i])  # To turn relay on, pull pin to low
+        return
+
 
     def driver_speed_callback(self, data):
         self.driver_speed = data.data
